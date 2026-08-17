@@ -24,8 +24,18 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 | 樣式 | **CSS Modules**,沒有裝任何 UI 或動畫套件 |
 | 字型 | Biryani(`next/font/google`,Light/Regular/SemiBold/Bold/Black) |
 | 圖片 | `next/image`,`next.config.ts` 把 `images.qualities` 開到 `[75, 90]` |
+| 影片 | 沒有自架,10 支動畫都是 YouTube 嵌入(`youtube-nocookie.com`),id 存在 `lib/artwork.ts` 的 `youtubeId` |
+| 版控 | **git**,repo 根目錄就是 `portfolio/`,分支 `main` |
 
 **注意**:專案根目錄的 `AGENTS.md` 是 `next dev` 自動產生並維護的,它提醒 Next 16 有不少 breaking change,動手前先查 `node_modules/next/dist/docs/`。這不是誤植,不要刪。
+
+### 版控狀況(2026-08-18 建立)
+
+- **repo 根目錄 = `portfolio/`**,不是外面那層 `portfolio website/`。這樣之後接 Vercel 不用設定子目錄。
+- 第一個 commit `048b20a`,124 個檔案,`.git` 約 30MB。
+- `.gitignore` 是 Next 的標準版本,沒有改過。`node_modules`(434MB)和 `.next`(321MB)都擋掉了,所以 800MB 的資料夾只有 30MB 進版控。`public/assets/`(32MB 作品圖)**有**進去。
+- **還沒有 GitHub remote**,是屋主刻意的——等網站真的完成再推,推之前要先決定 public 還是 private。
+- Windows 上 `git add` 會跳一堆 `LF will be replaced by CRLF`,那是正常的行末轉換(repo 存 LF、工作區用 CRLF),不是錯誤。專案沒有加 `.gitattributes`。
 
 已知的 Next 16 眉角(踩過的):
 - `<Image fill>` 不能再搭配 `style.width` / `style.height`,會直接報錯。需要自訂尺寸就別用 `fill`,改用明確的 `width` / `height`。
@@ -121,21 +131,23 @@ portfolio/
 │   └── ArtworkNav.tsx          分類子導覽 + scroll-spy
 ├── lib/
 │   ├── artwork.ts              49 個圖塊 × 4 斷點的座標、裁切、分類定義
+│   │                           10 個動畫圖塊另外帶 youtubeId
 │   ├── artwork-content.ts      作品文案(要屋主填)
 │   ├── resume.ts  site.ts  nav.ts
 └── public/assets/
     ├── images/artwork/ (48 檔) home/ resume/
-    ├── decor/ (波浪與同心圓 SVG)  icons/  brand/  cv/
+    ├── decor/ (波浪與同心圓 SVG)  icons/  brand/  cv/(CV PDF 在這)
     └── _unused/                被取代掉的匯出檔,留著備查
 ```
 
 `/preview` 跟 `/preview/artwork` 是開發用的,沒有任何連結指向它們,之後可以直接刪。
 
-### 三個值得知道的實作決定
+### 四個值得知道的實作決定
 
 1. **Artwork 頁是資料驅動的。** 49 個圖塊各自帶四套座標當 CSS 變數寫在 `style` 裡,整份 CSS 只用四條 media query 切換要讀哪一套。要加斷點只需補資料,不用動版面。
 2. **圖片裁切用 Figma 的裁切矩形還原,不是 `object-fit: cover`。** Figma 匯出的 PNG 是**未裁切的原圖**,裁切是 Figma 那邊的 transform。如果直接用 `cover` 置中裁,會切在完全不同的位置(例如 `17_image_81` 那朵紅花整個構圖都會跑掉)。所以 `lib/artwork.ts` 存了每個圖塊的 `crop` 百分比,分斷點——因為有幾個圖塊在不同斷點的裁切不一樣。
 3. **hover 疊層跟詳情頁共用同一份文案。** 填了 `title` 就兩個一起開,沒填就維持普通圖片。疊層的尺寸用 CSS container query 跟著圖塊大小等比縮放(圖塊從 69px 寬到 886px 寬都有,寫死一組數值會爆掉)。
+4. **影片走 YouTube 嵌入,而且不受文案規則限制。** 列表頁那 10 個格位放的**還是靜態縮圖**(加一個播放標記),播放器只在詳情頁——那一頁是手排畫布,塞 10 個 player 會拆掉構圖也會很慢。開啟詳情頁的條件因此從「有 `title`」放寬成 **「有 `title` 或有 `youtubeId`」**:影片本身就是作品,沒必要被一段還沒寫的敘述鎖住。沒文案的影片標題暫時用 `alt` 頂著,寫了真標題就會自動換掉。
 
 ---
 
@@ -152,12 +164,15 @@ portfolio/
 | 影片素材(待辦 4 第 1 點) | ✅ 10 支都接上 YouTube 嵌入,詳情頁播放 |
 | CV 檔案、社群連結網址(待辦 9) | ✅ 兩個都填進 `lib/site.ts` 了 |
 | Header 指示條彈性動畫(待辦 7) | ✅ 左右兩邊各一顆彈簧,拉長與回彈都是算出來的 |
+| 詳情頁 frame 高度貼合螢幕(待辦 10) | ✅ 四個斷點 740 / 950 / 790 / 940 |
+| 跨斷點設計不一致(待辦 11) | ✅ 屋主決定維持現狀,四項都不改 |
+| 素材整理(待辦 13) | ✅ 海報壓到 3.46MB;Figma 散落節點與 `_unused/` 決定留著 |
+| 網址改成有意義的 slug(待辦 12) | ⬜ 等待辦 8 寫完再一次換,**公開前要定案** |
+| 版控 | ✅ git repo 已建(`main`,commit `048b20a`);⬜ GitHub 等完成再推 |
 
 **程式端的待辦已經清空。** 剩下的 ⬜ 是在等屋主寫作品文案(待辦 8),以及公開前要定案的網址 slug(待辦 12,等 8 做完)。
 
-詳情頁四個 frame 的高度現在是 740 / 950 / 790 / 940(390 / 768 / 1440 / 1920),各自貼合該尺寸裝置的可用高度(待辦 10)。
-
-`npm run build` 目前是過的,10 條路由全部靜態產生,`tsc` 與 `eslint` 乾淨。
+`npm run build` 目前是過的,**20 個頁面**全部靜態產生(其中 11 個是作品詳情頁——The Duck 加 10 支影片),`tsc` 與 `eslint` 乾淨。
 
 ---
 
