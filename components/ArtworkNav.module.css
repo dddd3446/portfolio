@@ -1,0 +1,147 @@
+/* Component set `Nav Item / …` (377:130, 377:136, 377:142, 377:148). The
+   label sits on a 60px line in the master component and the instances only
+   change the type size, so the line box is kept at 60px scaled per band and
+   the button box is whatever Figma resized the instance to. */
+.nav {
+  position: relative;
+  height: var(--nav-h);
+}
+
+.item {
+  position: absolute;
+  left: 0;
+  top: var(--item-top);
+  width: var(--item-w);
+  height: var(--item-h);
+  text-align: left;
+  cursor: pointer;
+}
+
+.label {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-size: var(--label-size);
+  font-weight: 300;
+  line-height: var(--label-line);
+  color: var(--c-ink);
+  white-space: nowrap;
+  transition:
+    color 0.2s ease,
+    transform 0.25s ease;
+}
+
+/* Hover only recolours — no shift, no mark — so that it can combine with the
+   pressed state without fighting it (vscodetodo_1.md, todo 5 point 4). */
+.item:hover .label {
+  color: var(--c-muted);
+}
+
+/* Pressed: the label shifts right and a short rule appears under its start.
+   Only the 1440 frame draws this state; the other bands scale it by the same
+   ratio as the label type. */
+.mark {
+  position: absolute;
+  top: var(--mark-top);
+  left: var(--mark-left);
+  width: var(--mark-w);
+  height: var(--mark-h);
+  background: var(--c-rule);
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.item[data-pressed="true"] .label {
+  color: var(--c-muted);
+  transform: translateX(var(--press-shift));
+}
+
+.item[data-pressed="true"] .mark {
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .label,
+  .mark {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------- */
+
+@media (min-width: 1200px) and (max-width: 1727.98px) {
+  .nav {
+    --nav-h: var(--nav-h-w1440);
+    --label-size: 0.9375rem; /* 15 */
+    --label-line: 3.75rem; /* 60 */
+    --press-shift: 1rem; /* 16 */
+    --mark-top: 2.375rem; /* 38 */
+    --mark-left: 1.0625rem; /* 17 */
+    --mark-w: 1rem; /* 16 */
+    --mark-h: 0.125rem; /* 2 */
+  }
+
+  .item {
+    --item-top: var(--top-w1440);
+    --item-w: var(--w-w1440);
+    --item-h: var(--h-w1440);
+  }
+}
+
+@media (min-width: 1728px) {
+  .nav {
+    --nav-h: var(--nav-h-w1920);
+    --label-size: 1.25rem; /* 20 */
+    --label-line: 3.75rem; /* 60 */
+    --press-shift: 1.3333rem; /* 16 x 20/15 */
+    --mark-top: 3.1667rem;
+    --mark-left: 1.4167rem;
+    --mark-w: 1.3333rem;
+    --mark-h: 0.1667rem;
+  }
+
+  .item {
+    --item-top: var(--top-w1920);
+    --item-w: var(--w-w1920);
+    --item-h: var(--h-w1920);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .nav {
+    --nav-h: var(--nav-h-w768);
+    --label-size: 0.625rem; /* 10 */
+    --label-line: 2.0625rem; /* the 768 instances are ~33 tall, not 60 */
+    --press-shift: 0.6667rem; /* 16 x 10/15 */
+    --mark-top: 1.5833rem;
+    --mark-left: 0.7083rem;
+    --mark-w: 0.6667rem;
+    --mark-h: 0.0833rem;
+  }
+
+  .item {
+    --item-top: var(--top-w768);
+    --item-w: var(--w-w768);
+    --item-h: var(--h-w768);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .nav {
+    --nav-h: var(--nav-h-w390);
+    --label-size: 0.625rem; /* 10 */
+    --label-line: 2.0625rem;
+    --press-shift: 0.6667rem;
+    --mark-top: 1.5833rem;
+    --mark-left: 0.7083rem;
+    --mark-w: 0.6667rem;
+    --mark-h: 0.0833rem;
+  }
+
+  .item {
+    --item-top: var(--top-w390);
+    --item-w: var(--w-w390);
+    --item-h: var(--h-w390);
+  }
+}

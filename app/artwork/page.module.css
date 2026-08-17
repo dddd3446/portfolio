@@ -1,0 +1,337 @@
+/* Artwork is a hand-placed collage, so every piece keeps its designed frame
+   coordinates. Four sets of them arrive as custom properties on each element
+   and the band blocks at the foot of this file pick which set is live:
+
+     `Artwork  390` (514:1747)   390 x 3252, footer at 3149
+     `Artwork  768` (473:1301)   768 x 4693, footer at 4530
+     `Artwork 1440` (328:488)   1440 x 9435, footer at 9027
+     `Artwork 1920` (454:1022)  1920 x 8582, footer at 8174
+
+   Unlike the other three pages there is no `overflow: hidden` here — it would
+   make this element the sticky sub-nav's scrollport and stop the nav sticking
+   to the viewport. The curves are clipped individually instead, since the
+   exported SVGs carry overflow="visible". */
+.page {
+  position: relative;
+  background: var(--c-bg);
+  height: var(--canvas-h);
+}
+
+.wave {
+  position: absolute;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  top: var(--y);
+  height: var(--h);
+  clip-path: inset(0);
+}
+
+.stage {
+  position: relative;
+  z-index: 2;
+  width: var(--stage-w);
+  height: 100%;
+  margin-inline: auto;
+}
+
+/* The nav stays put while the canvas scrolls past it. The wrapper reaches the
+   foot of the canvas and the nav sticks inside it, so it releases just before
+   the footer instead of sitting on top of the black band. It is only as wide
+   as its content, so it never covers the artwork to its right. */
+.subnav {
+  position: absolute;
+  top: var(--subnav-top);
+  bottom: 0;
+  left: var(--gutter);
+  z-index: 3;
+  pointer-events: none;
+}
+
+.subnavInner {
+  position: sticky;
+  top: var(--subnav-top);
+  pointer-events: auto;
+}
+
+/* The detail view's close control returns to `/artwork#region-…`, so the
+   landing has to clear the fixed header. */
+.region {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  top: var(--y);
+  height: var(--h);
+  scroll-margin-top: calc(var(--header-h) + 1.5rem);
+}
+
+.intro {
+  text-align: var(--align);
+}
+
+.intro,
+.work {
+  position: absolute;
+  left: var(--x);
+  top: var(--y);
+  width: var(--w);
+  height: var(--h);
+}
+
+.image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: var(--pos, center);
+}
+
+/* Left / top / width / height come from the tile's Figma crop rect. */
+.imageCropped {
+  position: absolute;
+  left: var(--cl);
+  top: var(--ct);
+  width: var(--cw);
+  height: var(--ch);
+  max-width: none;
+  object-fit: fill;
+}
+
+/* ---- category intros ---- */
+
+.introHeading {
+  font-size: var(--intro-head-size);
+  font-weight: var(--heading-weight, 600);
+  line-height: normal;
+  letter-spacing: var(--head-track);
+}
+
+.introBody {
+  font-size: var(--intro-body-size);
+  font-weight: 400;
+  line-height: var(--body-lead);
+  letter-spacing: var(--body-track);
+}
+
+/* ---- work tiles ---- */
+
+/* A container so the hover overlay can size itself off the tile it is in —
+   the tiles run from 99px wide to 886px, and the overlay was specced against
+   one 344x364 instance. */
+.work {
+  margin: 0;
+  overflow: hidden;
+  container-type: inline-size;
+}
+
+.open {
+  display: block;
+  position: absolute;
+  inset: 0;
+}
+
+/* Play badge for the ten animations. Sized off the tile rather than in px:
+   the same mark has to sit on a 138px-wide box at 390 and a 569px one at
+   1440, and a fixed size would swamp the first and vanish on the second.
+   A triangle drawn with borders, so there is no asset to load. */
+.play {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 18cqw;
+  max-width: 3.5rem;
+  min-width: 1.5rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: rgb(0 0 0 / 45%);
+  transform: translate(-50%, -50%);
+  transition:
+    background 0.3s ease,
+    opacity 0.3s ease;
+}
+
+/* Inset in percentages so the triangle tracks the badge at every tile size.
+   Nudged right of centre because a triangle's visual centre is left of its
+   bounding box. */
+.play::after {
+  content: "";
+  position: absolute;
+  inset: 32% 30% 32% 38%;
+  background: #fff;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+
+.work:hover .play {
+  background: rgb(0 0 0 / 70%);
+}
+
+/* The overlay copy and the badge would sit on top of each other; on the
+   pieces that have both, the copy wins on hover. */
+.work[data-hover]:hover .play {
+  opacity: 0;
+}
+
+/* Component `show hover` (373:244). Only The Duck carries the overlay copy so
+   far; the rest render as plain tiles until the remaining titles exist. */
+.work[data-hover] img {
+  transition: transform 0.4s ease;
+}
+
+.work[data-hover]:hover img {
+  transform: scale(1.0947);
+}
+
+/* In the design the copy block sits 26px in and ends 20px off the bottom of a
+   344x364 tile. Anchoring it to the bottom and expressing everything as a
+   share of the tile reproduces that on the one tile it was drawn for and
+   still works on the other 48, which are all different sizes. */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  padding: 7.56% 7.56% 5.81%; /* 26 / 26 / 20 of 344 */
+  color: var(--c-ink);
+  /* The wash is the element's own background rather than a ::before: at
+     opacity 1 the caption is not a stacking context, so a z-index:-1 child
+     would escape behind the photo instead of sitting over it. */
+  background: rgb(217 217 217 / 80%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+.work[data-hover]:hover .overlay,
+.work[data-hover]:focus-within .overlay {
+  opacity: 1;
+}
+
+.overlayTitle {
+  font-size: 6.395cqw; /* 22 of 344 */
+  font-weight: 800;
+  line-height: normal;
+  letter-spacing: 0.872cqw; /* 3 of 344 */
+}
+
+.overlayBody {
+  font-size: 3.488cqw; /* 12 of 344 */
+  font-weight: 400;
+  line-height: 2;
+  letter-spacing: 0.279cqw; /* 0.96 of 344 */
+}
+
+/* ---------------------------------------------------------------------- */
+/* Band selection. Each block only remaps which coordinate set is live.    */
+
+@media (min-width: 1200px) and (max-width: 1727.98px) {
+  .page {
+    --canvas-h: 564.1875rem; /* 9027 */
+    --subnav-top: 9.875rem; /* 158 */
+    --intro-head-size: 1.25rem; /* 20 */
+    --intro-body-size: 0.75rem; /* 12 */
+  }
+
+  .wave,
+  .region,
+  .intro,
+  .work {
+    --x: var(--x-w1440);
+    --y: var(--y-w1440);
+    --w: var(--w-w1440);
+    --h: var(--h-w1440);
+    --cl: var(--cl-w1440);
+    --ct: var(--ct-w1440);
+    --cw: var(--cw-w1440);
+    --ch: var(--ch-w1440);
+    --pos: var(--pos-w1440, center);
+    --align: var(--align-w1440);
+    --head-track: var(--head-track-w1440);
+    --body-track: var(--body-track-w1440);
+    --body-lead: var(--body-lead-w1440);
+  }
+}
+
+@media (min-width: 1728px) {
+  .page {
+    --canvas-h: 510.875rem; /* 8174 */
+    --subnav-top: 11.5625rem; /* 185 */
+    --intro-head-size: 1.5625rem; /* 25 */
+    --intro-body-size: 0.9375rem; /* 15 */
+  }
+
+  .wave,
+  .region,
+  .intro,
+  .work {
+    --x: var(--x-w1920);
+    --y: var(--y-w1920);
+    --w: var(--w-w1920);
+    --h: var(--h-w1920);
+    --cl: var(--cl-w1920);
+    --ct: var(--ct-w1920);
+    --cw: var(--cw-w1920);
+    --ch: var(--ch-w1920);
+    --pos: var(--pos-w1920, center);
+    --align: var(--align-w1920);
+    --head-track: var(--head-track-w1920);
+    --body-track: var(--body-track-w1920);
+    --body-lead: var(--body-lead-w1920);
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .page {
+    --canvas-h: 283.125rem; /* 4530 */
+    --subnav-top: 4.4375rem; /* 71 */
+    --intro-head-size: 0.9375rem; /* 15 */
+    --intro-body-size: 0.5rem; /* 8 */
+  }
+
+  .wave,
+  .region,
+  .intro,
+  .work {
+    --x: var(--x-w768);
+    --y: var(--y-w768);
+    --w: var(--w-w768);
+    --h: var(--h-w768);
+    --cl: var(--cl-w768);
+    --ct: var(--ct-w768);
+    --cw: var(--cw-w768);
+    --ch: var(--ch-w768);
+    --pos: var(--pos-w768, center);
+    --align: var(--align-w768);
+    --head-track: var(--head-track-w768);
+    --body-track: var(--body-track-w768);
+    --body-lead: var(--body-lead-w768);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .page {
+    --canvas-h: 196.8125rem; /* 3149 */
+    --subnav-top: 5.125rem; /* 82 */
+    --intro-head-size: 0.625rem; /* 10 */
+    --intro-body-size: 0.5rem; /* 8 */
+  }
+
+  .wave,
+  .region,
+  .intro,
+  .work {
+    --x: var(--x-w390);
+    --y: var(--y-w390);
+    --w: var(--w-w390);
+    --h: var(--h-w390);
+    --cl: var(--cl-w390);
+    --ct: var(--ct-w390);
+    --cw: var(--cw-w390);
+    --ch: var(--ch-w390);
+    --pos: var(--pos-w390, center);
+    --align: var(--align-w390);
+    --head-track: var(--head-track-w390);
+    --body-track: var(--body-track-w390);
+    --body-lead: var(--body-lead-w390);
+  }
+}

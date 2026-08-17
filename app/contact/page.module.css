@@ -1,0 +1,145 @@
+/* Contact — frames `contact 390` (514:1799), `contact 768` (473:1395),
+   `contact 1440` (234:251) and `contact 1920` (473:1212). The header is fixed
+   and floats over the top, which is why nothing is offset down for it.
+
+   Note: the 768 frame draws the social list back into the footer, which 1440
+   and 1920 both leave out. The footer follows 1440/1920 — the page already
+   carries a row of large social buttons in its body, so repeating them is
+   what the omission is there to avoid. */
+.page {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-bg);
+  height: var(--page-h);
+}
+
+/* Spans the full frame width in the design, and the export is
+   preserveAspectRatio="none", so it stretches to the viewport. In Figma the
+   shape carries rotate(180deg) plus scaleY(-1), which together are simply a
+   horizontal mirror. */
+.wave {
+  position: absolute;
+  left: 0;
+  top: var(--wave-y);
+  width: 100%;
+  height: var(--wave-h);
+  transform: scaleX(-1);
+}
+
+.email {
+  font-size: var(--email-size);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: var(--email-track);
+  transition: color 0.2s ease;
+}
+
+.email:hover {
+  color: var(--c-rule);
+}
+
+.social {
+  display: flex;
+  align-items: center;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.social li {
+  flex-shrink: 0;
+}
+
+.social img {
+  width: 100%;
+  height: 100%;
+  transition: opacity 0.2s ease;
+}
+
+.social a:hover img {
+  opacity: 0.55;
+}
+
+/* ---------------------------------------------------------------------- */
+
+.stage {
+  position: relative;
+  z-index: 1;
+  width: var(--stage-w);
+  height: 100%;
+  margin-inline: auto;
+}
+
+.email {
+  position: absolute;
+  top: var(--email-y);
+  left: 50%;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+/* The three glyphs are different sizes and sit at slightly different y in
+   Figma because they are optically centred on one line; centring the row
+   reproduces that without hard-coding each offset. The whole row is scaled
+   rather than re-sized per band — Figma resizes it as a unit, so the gap
+   scales with the glyphs. */
+.social {
+  position: absolute;
+  top: var(--social-y);
+  left: 50%;
+  gap: 3.625rem; /* 58 at 1440 */
+  transform: translate(-50%, -50%) scale(var(--icon-scale, 1));
+}
+
+@media (min-width: 1200px) and (max-width: 1727.98px) {
+  .page {
+    --page-h: 50.8125rem; /* 813 */
+    --wave-y: 16.183rem; /* 258.93 */
+    --wave-h: 47.567rem; /* 761.072 */
+    --email-y: 21.875rem; /* 350 */
+    --email-size: 1.5625rem; /* 25 */
+    --email-track: 0.1875rem; /* 3 */
+    --social-y: 32.4375rem; /* 519 */
+    --icon-scale: 1;
+  }
+}
+
+@media (min-width: 1728px) {
+  .page {
+    --page-h: 65.625rem; /* 1050 */
+    --wave-y: 15.8125rem; /* 253 */
+    --wave-h: 63.4375rem; /* 1015 */
+    --email-y: 30.3125rem; /* 485 */
+    --email-size: 1.875rem; /* 30 */
+    --email-track: 0.225rem; /* 3.6 */
+    --social-y: 43.875rem; /* 702 */
+    --icon-scale: 1.3333;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .page {
+    --page-h: 25.875rem; /* 414 */
+    --wave-y: 6.125rem; /* 98 */
+    --wave-h: 25.375rem; /* 406 */
+    --email-y: 11.875rem; /* 190 */
+    --email-size: 0.9375rem; /* 15 */
+    --email-track: 0.1125rem; /* 1.8 */
+    --social-y: 17.3125rem; /* 277 */
+    --icon-scale: 0.54;
+  }
+}
+
+/* 390 frame. */
+@media (max-width: 767.98px) {
+  .page {
+    --page-h: 30.4375rem; /* 487 */
+    --wave-y: 7.3125rem; /* 117 */
+    --wave-h: 23.09375rem; /* 369.5 */
+    --email-y: 13.4375rem; /* 215 */
+    --email-size: 0.9375rem; /* 15 */
+    --email-track: 0.1125rem; /* 1.8 */
+    --social-y: 21rem; /* 336 */
+    --icon-scale: 0.513;
+  }
+}

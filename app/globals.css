@@ -1,0 +1,191 @@
+/* Design tokens — values taken from the Figma file `portfolio`, page `website`.
+ *
+ * SIZING CONVENTION: every design measurement in this project is written in
+ * rem as `figma_px / 16`, so 1rem === 16px at the design width.
+ *
+ * BANDS. Figma holds four hand-made layouts — 390, 768, 1440 and 1920 — and
+ * they are genuinely different arrangements, not one layout at four sizes. Each
+ * band owns a viewport range and scales its own design proportionally off the
+ * root font size, which keeps art-directed relationships (the wave meeting the
+ * hero photo, the hand-placed artwork collage) intact without per-element
+ * work. Scaling is only ever *down* from the design width: past it the stage
+ * is pinned and centred, and full-bleed pieces stretch to the viewport.
+ *
+ *   <= 767.98    390 design
+ *   768 - 1199   768 design
+ *   1200 - 1727  1440 design
+ *   >= 1728      1920 design
+ *
+ * The band edges are the design widths themselves. Each layout scales down
+ * freely below the width it was drawn at, and up only a little past it — 1.25x
+ * on 390, 1.15x on 768, not at all on 1440 and 1920 — after which the stage
+ * pins and centres rather than ballooning towards the next design up.
+ */
+:root {
+  /* Colours */
+  --c-bg: #f8f8f8;
+  --c-wave: #ededed;
+  --c-ink: #000000;
+  --c-paper: #ffffff;
+  --c-muted: #a8a8a8;
+  --c-rule: #626262;
+  --c-section-rule: #5d5d5d;
+  --c-footer-bg: #000000;
+  --c-footer-wave: #0b0b0b;
+
+  /* Layout */
+  --stage-w: 90rem; /* 1440 */
+  --gutter: 4.375rem; /* 70 */
+  /* Home / Resume / Contact band. Artwork keeps the taller 113px band and
+     overrides this on the header itself. */
+  --header-h: 6rem; /* 96 */
+
+  /* Type — tracking is baked per role because the design uses a different
+     letter-spacing at almost every size. */
+  --t-nav-size: 0.9375rem; /* 15 */
+  --t-nav-track: 0.1125rem; /* 1.8 */
+  --t-body-size: 1.25rem; /* 20 */
+  --t-body-track: 0.225rem; /* 3.6 */
+  --t-h1-size: 2.8125rem; /* 45 */
+  --t-h1-track: 0.50625rem; /* 8.1 */
+  --t-slogan-size: 3.75rem; /* 60 */
+  --t-slogan-track: 0.675rem; /* 10.8 */
+  --t-meta-size: 0.9375rem; /* 15 */
+  --t-meta-track: 0.16875rem; /* 2.7 */
+}
+
+/* ---- 1440 band (the tokens above are its values) ---- */
+
+html {
+  font-size: 16px;
+}
+
+@media (max-width: 1439.98px) {
+  html {
+    font-size: calc(100vw / 90); /* 1440 / 16 */
+  }
+}
+
+/* ---- 1920 band ---- */
+
+@media (min-width: 1728px) {
+  html {
+    font-size: min(calc(100vw / 120), 16px); /* 1920 / 16 */
+  }
+
+  :root {
+    --stage-w: 120rem; /* 1920 */
+    --gutter: 6rem; /* 96 */
+    --header-h: 7.6875rem; /* 123 */
+    --t-nav-size: 1.125rem; /* 18 */
+    --t-nav-track: 0.135rem; /* 2.16 */
+    --t-slogan-size: 4.0625rem; /* 65 */
+    --t-slogan-track: 0.73125rem; /* 11.7 */
+    --t-meta-size: 1.125rem; /* 18 */
+    --t-meta-track: 0.2025rem; /* 3.24 */
+  }
+}
+
+/* ---- 768 band ---- */
+
+@media (max-width: 1199.98px) {
+  html {
+    /* Capped at 1.15x: past that the 768 layout is being stretched a long way
+       from the width it was drawn at, and pinning it reads better. */
+    font-size: min(calc(100vw / 48), 18.4px); /* 768 / 16 */
+  }
+
+  :root {
+    --stage-w: 48rem; /* 768 */
+    --gutter: 2.375rem; /* 38 */
+    --header-h: 3.25rem; /* 52 */
+    --t-nav-size: 0.5rem; /* 8 */
+    --t-nav-track: 0.06rem; /* 0.96 */
+    --t-slogan-size: 1.75rem; /* 28 */
+    --t-slogan-track: 0.315rem; /* 5.04 */
+    --t-meta-size: 0.5rem; /* 8 */
+    --t-meta-track: 0.09rem; /* 1.44 */
+  }
+}
+
+/* ---- 390 band ---- */
+
+@media (max-width: 767.98px) {
+  html {
+    /* Capped at 1.25x for the same reason. Real phones sit at 360-430, well
+       inside the cap; the range above that is tablets, where the layout pins
+       and centres instead of ballooning. */
+    font-size: min(calc(100vw / 24.375), 20px); /* 390 / 16 */
+  }
+
+  :root {
+    --stage-w: 24.375rem; /* 390 */
+    --gutter: 1.4375rem; /* 23 */
+    --header-h: 3.6875rem; /* 59 */
+    --t-nav-size: 0.75rem; /* 12 */
+    --t-nav-track: 0.09rem; /* 1.44 */
+    --t-slogan-size: 1.125rem; /* 18 */
+    --t-slogan-track: 0.2025rem; /* 3.24 */
+    --t-meta-size: 0.3125rem; /* 5 */
+    --t-meta-track: 0.05625rem; /* 0.9 */
+  }
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  /* `clip` rather than `hidden`: it contains the decorative shapes that bleed
+     past the edges without turning body into a scroll container, which would
+     break the fixed header. */
+  overflow-x: clip;
+  background: var(--c-bg);
+  color: var(--c-ink);
+  font-family: var(--font-biryani), sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin: 0;
+  font-weight: inherit;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+button {
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+}
+
+img,
+svg {
+  display: block;
+}
+
+/* Visually hidden but still announced by screen readers. */
+.srOnly {
+  position: absolute;
+  overflow: hidden;
+  clip-path: inset(50%);
+  width: 1px;
+  height: 1px;
+  white-space: nowrap;
+}

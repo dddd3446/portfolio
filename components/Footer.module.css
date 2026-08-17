@@ -1,0 +1,173 @@
+/* Shared footer. The black band is the same 408px at 1440 and 1920 and drops
+   to 163 at 768; everything inside is placed off the band's top edge, so the
+   offsets below are all "px from the top of the footer" in the design. */
+.footer {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-footer-bg);
+  color: var(--c-paper);
+
+  /* 1440 frame. Overridden per band at the foot of this file. */
+  --band-h: 25.5rem; /* 408 */
+  --wave-top: 1.0625rem; /* 17 */
+  --wave-h: 24.4375rem; /* 391 */
+  --slogan-x: 44.3125rem; /* 709 */
+  --slogan-y: 4.3125rem; /* 69 */
+  --slogan-w: 40rem; /* 609 designed — see note below */
+  --social-x: 7.9375rem; /* 127 */
+  --social-y: 7.375rem; /* 118 */
+  --social-w: 5.9375rem; /* 95 */
+  --social-size: 0.9375rem; /* 15 */
+  --social-track: 0.121875rem; /* 1.95 */
+  --social-leading: normal;
+  --copy-y: 18.25rem; /* 292 */
+  --mark-size: 1.25rem; /* 20 */
+  --mark-gap: 0.625rem; /* 10 */
+}
+
+/* Decorative swell across the black band. The exported SVG carries
+   preserveAspectRatio="none", so it is meant to stretch to the viewport. */
+.wave {
+  position: absolute;
+  top: var(--wave-top);
+  left: 0;
+  width: 100%;
+  height: var(--wave-h);
+}
+
+.stage {
+  position: relative;
+  width: var(--stage-w);
+  margin-inline: auto;
+}
+
+.slogan {
+  font-size: var(--t-slogan-size);
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: var(--t-slogan-track);
+}
+
+.social {
+  margin: 0;
+  padding: 0;
+  font-size: var(--social-size);
+  font-weight: 300;
+  line-height: var(--social-leading);
+  letter-spacing: var(--social-track);
+  list-style: none;
+}
+
+.social a {
+  transition: color 0.2s ease;
+}
+
+.social a:hover {
+  color: var(--c-muted);
+}
+
+.copyright {
+  display: flex;
+  gap: var(--mark-gap);
+  align-items: center;
+  font-size: var(--t-meta-size);
+  font-weight: 600;
+  letter-spacing: var(--t-meta-track);
+}
+
+.copyrightMark {
+  flex-shrink: 0;
+  width: var(--mark-size);
+  height: var(--mark-size);
+}
+
+/* ---------------------------------------------------------------------- */
+
+/* Every designed frame places the footer absolutely inside its band. */
+.footer {
+  height: var(--band-h);
+}
+
+.stage {
+  height: 100%;
+}
+
+.slogan {
+  position: absolute;
+  top: var(--slogan-y);
+  left: var(--slogan-x);
+  width: var(--slogan-w);
+}
+
+.social {
+  position: absolute;
+  top: var(--social-y);
+  left: var(--social-x);
+  width: var(--social-w);
+}
+
+.copyright {
+  position: absolute;
+  top: var(--copy-y);
+  left: var(--social-x);
+}
+
+/* 1920 frame. */
+@media (min-width: 1728px) {
+  .footer {
+    --slogan-x: 59.0833rem; /* 945.33 */
+    --slogan-y: 3.5625rem; /* 57 */
+    --slogan-w: 53.25rem; /* 852 — 812 designed, widened like the 1440 case */
+    --social-x: 10.5833rem; /* 169.33 */
+    --social-y: 7.125rem; /* 114 */
+    --social-w: 7.9167rem; /* 126.67 */
+    --social-size: 1.1875rem; /* 19 */
+    --social-track: 0.154375rem; /* 2.47 */
+    --social-leading: 2;
+    --copy-y: 19.375rem; /* 310 */
+    --mark-size: 1.6875rem; /* 27 */
+    --mark-gap: 0.8333rem; /* 13.33 */
+  }
+}
+
+/* 768 frame. */
+@media (max-width: 1199.98px) {
+  .footer {
+    --band-h: 10.2102rem; /* 163.364 */
+    --wave-top: 0.4254rem; /* 6.807 */
+    --wave-h: 9.7848rem; /* 156.557 */
+    --slogan-x: 23.6875rem; /* 379 */
+    --slogan-y: 1.3856rem; /* 22.17 */
+    --slogan-w: 21.25rem; /* 340 — 325 designed, widened like the 1440 case */
+    --social-x: 4.25rem; /* 68 */
+    --social-y: 2.8856rem; /* 46.17 */
+    --social-w: 3.1875rem; /* 51 */
+    --social-size: 0.5rem; /* 8 */
+    --social-track: 0.065rem; /* 1.04 */
+    --social-leading: 2;
+    --copy-y: 8.0731rem; /* 129.17 */
+    --mark-size: 0.625rem; /* 10 */
+    --mark-gap: 0.3638rem; /* 5.82 */
+  }
+}
+
+/* 390 frame. */
+@media (max-width: 767.98px) {
+  .footer {
+    --band-h: 6.4375rem; /* 103 */
+    --wave-top: 0.3188rem; /* 5.1 */
+    --wave-h: 5.8871rem; /* 94.193 */
+    --slogan-x: 11.25rem; /* 180 */
+    --slogan-y: 0.75rem; /* 12 */
+    --slogan-w: 12rem; /* 192 — 183 designed, widened like the other bands */
+    --social-x: 2.125rem; /* 34 */
+    --social-y: 0.875rem; /* 14 */
+    --social-w: 3.125rem; /* 50 */
+    --social-size: 0.5rem; /* 8 */
+    --social-track: 0.065rem; /* 1.04 */
+    --social-leading: 1.69;
+    --copy-y: 4.7731rem; /* 76.37 */
+    --mark-size: 0.3125rem; /* 5 */
+    --mark-gap: 0.125rem; /* 2 */
+  }
+}

@@ -1,0 +1,610 @@
+/* Resume — frames `Resume 390` (514:1773), `Resume 768` (473:1346),
+   `Resume 1440` (275:351) and `Resume 1920` (473:1140). The header is fixed and floats over the top, which
+   is why nothing is offset down for it.
+
+   The headings, their rules and the lists below them are laid out in flow
+   inside absolutely-placed columns, so the offsets are expressed as margins
+   off a heading box whose line-height is pinned per band. */
+.page {
+  position: relative;
+  overflow: hidden;
+  background: var(--c-bg);
+  height: var(--page-h);
+}
+
+.waveFoot {
+  display: none;
+}
+
+.portrait img {
+  object-fit: cover;
+  /* The source is taller than the frame; Figma crops the excess off the top. */
+  object-position: center bottom;
+}
+
+.introHeading {
+  font-size: var(--intro-head-size);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: var(--intro-head-track);
+}
+
+.introBody {
+  font-size: var(--body-size);
+  font-weight: 400;
+  line-height: var(--body-lead);
+  letter-spacing: var(--intro-body-track);
+}
+
+/* ---- shared section furniture ---- */
+
+/* The column widths below size the bullet lists; the headings are wider than
+   their column in the design, so they are never allowed to wrap to fit it.
+   The line-height is pinned rather than left at `normal` because the rule and
+   the list are offset from this box. */
+.sectionHeading {
+  font-size: var(--head-size);
+  font-weight: 600;
+  line-height: var(--head-line);
+  letter-spacing: var(--head-track);
+  white-space: nowrap;
+}
+
+.rule {
+  display: block;
+  height: var(--rule-h);
+  margin-top: var(--rule-gap);
+  background: var(--c-section-rule);
+}
+
+.ruleEducation {
+  margin-top: var(--edu-rule-gap);
+}
+
+/* Distance from the rule to the first bullet, overridden per column because
+   the design runs the right-hand pair tighter than the left two. */
+.list {
+  margin: var(--list-gap) 0 0;
+  padding-left: var(--list-pad);
+  font-size: var(--list-size);
+  font-weight: 300;
+  line-height: var(--list-lead);
+  letter-spacing: var(--list-track);
+  list-style: disc;
+}
+
+/* ---- education ---- */
+
+.eduList {
+  margin: var(--edu-list-gap) 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Laid out in flow rather than absolutely, so a description that wraps to an
+   extra line in the browser pushes the next entry down instead of colliding. */
+.eduEntry + .eduEntry {
+  margin-top: var(--edu-entry-gap);
+}
+
+/* Flex-start, not baseline: the title and the year sit on different line
+   heights and the design tops them out together. */
+.eduTitleRow {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.eduTitle {
+  font-size: var(--edu-title-size);
+  font-weight: 700;
+  line-height: var(--edu-title-lead);
+  letter-spacing: var(--edu-title-track);
+}
+
+.eduPeriod {
+  flex-shrink: 0;
+  font-size: var(--edu-period-size);
+  font-weight: 400;
+  line-height: var(--edu-period-lead);
+  letter-spacing: var(--edu-period-track);
+  white-space: nowrap;
+}
+
+.eduOrg {
+  font-size: var(--edu-org-size);
+  font-weight: 300;
+  line-height: var(--edu-org-lead);
+  letter-spacing: var(--edu-org-track);
+}
+
+.eduDescription {
+  margin-top: var(--edu-desc-gap);
+  font-size: var(--body-size);
+  font-weight: 300;
+  line-height: var(--body-lead);
+  letter-spacing: var(--edu-desc-track);
+}
+
+/* The design tracks the first entry's description wider than the second one.
+   It reads as a slip rather than intent, but it is what is drawn. */
+.eduEntry:first-child .eduDescription {
+  letter-spacing: var(--edu-desc1-track);
+}
+
+/* ---- download cv ---- */
+
+.cta {
+  display: inline-flex;
+  gap: var(--cta-gap);
+  align-items: center;
+  padding: var(--cta-pad);
+  font-size: var(--cta-size);
+  font-weight: 600;
+  line-height: normal;
+  letter-spacing: var(--cta-track);
+  white-space: nowrap;
+  border: 1.5px solid var(--c-ink);
+  transition:
+    background-color 0.25s ease,
+    color 0.25s ease;
+}
+
+.cta:hover:not(.ctaInert) {
+  color: var(--c-bg);
+  background: var(--c-ink);
+}
+
+/* Looks exactly as designed; it just does nothing until SITE.cvPath is set,
+   which is better than shipping a link that 404s. */
+.ctaInert {
+  cursor: default;
+}
+
+/* ---------------------------------------------------------------------- */
+
+/* Both waves bleed off an edge, so they are pinned to the stage and widened
+   to keep reaching that edge on screens wider than the design. */
+.waveTop {
+  position: absolute;
+  top: var(--wt-y);
+  left: 0;
+  width: var(--wt-w);
+  height: var(--wt-h);
+}
+
+.waveBottom {
+  position: absolute;
+  top: var(--wb-y);
+  left: var(--wb-x);
+  width: var(--wb-w);
+  height: var(--wb-h);
+}
+
+.stage {
+  position: relative;
+  z-index: 1;
+  width: var(--stage-w);
+  height: 100%;
+  margin-inline: auto;
+}
+
+.portrait {
+  position: absolute;
+  top: var(--portrait-y);
+  left: var(--portrait-x);
+  width: var(--portrait-w);
+  height: var(--portrait-h);
+}
+
+.introHeading {
+  position: absolute;
+  top: var(--intro-head-y);
+  left: var(--col-b);
+  /* One line in Figma. The web build of Biryani sets it a shade wider, so
+     it is left unconstrained rather than allowed to wrap. */
+  white-space: nowrap;
+}
+
+.introBody {
+  position: absolute;
+  top: var(--intro-body-y);
+  left: var(--col-b);
+  width: var(--intro-body-w);
+}
+
+.education {
+  position: absolute;
+  top: var(--edu-y);
+  left: var(--col-b);
+  width: var(--edu-w);
+}
+
+.eduDescription {
+  width: var(--edu-desc-w);
+}
+
+.colDesign,
+.colDevelopment,
+.colLanguage,
+.colHobbies {
+  position: absolute;
+  top: var(--skills-y);
+}
+
+.colDesign {
+  left: var(--col-1);
+  width: var(--col-1-w);
+}
+
+.colDevelopment {
+  top: var(--dev-y, var(--skills-y));
+  left: var(--col-2);
+  width: var(--col-2-w);
+}
+
+.colLanguage {
+  top: var(--lang-y, var(--skills-y));
+  left: var(--col-3);
+  width: var(--col-3-w);
+  --list-gap: var(--list-gap-tight);
+}
+
+.colHobbies {
+  top: var(--hobbies-y);
+  left: var(--col-3);
+  width: var(--col-4-w);
+  --list-gap: var(--list-gap-tighter);
+}
+
+.cta {
+  position: absolute;
+  top: var(--cta-y);
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 1200px) and (max-width: 1727.98px) {
+  .page {
+    --page-h: 103.3125rem; /* 1653 */
+    --wt-y: 8.4375rem; /* 135 */
+    --wt-w: calc(50% + 10.3695rem); /* right edge at stage 885.913 */
+    --wt-h: 67.8035rem; /* 1084.856 */
+    --wb-x: calc(50% - 65.125rem); /* stage x = -322 */
+    --wb-y: 55.6875rem; /* 891 */
+    --wb-w: calc(50% + 65.125rem); /* 1762 at 1440 */
+    --wb-h: 65.1875rem; /* 1043 */
+    --portrait-x: 15.75rem; /* 252 */
+    --portrait-y: 11.8125rem; /* 189 */
+    --portrait-w: 21.0625rem; /* 337 */
+    --portrait-h: 41.75rem; /* 668 */
+    --col-b: 40.5rem; /* 648 */
+    --intro-head-y: 14.75rem; /* 236 */
+    --intro-head-size: 2.5rem; /* 40 */
+    --intro-head-track: 0.45rem; /* 7.2 */
+    --intro-body-y: 19.1875rem; /* 307 */
+    --intro-body-w: 33.75rem; /* 540 */
+    --intro-body-track: 0.16875rem; /* 2.7 */
+    --body-size: 0.9375rem; /* 15 */
+    --body-lead: 1.875rem; /* 30 */
+    --edu-y: 28.1875rem; /* 451 */
+    --edu-w: 33.75rem; /* 540 */
+    --edu-desc-w: 33.6875rem; /* 539 */
+    --head-size: 1.25rem; /* 20 */
+    --head-line: 2.1875rem; /* 35 */
+    --head-track: 0.225rem; /* 3.6 */
+    --rule-h: 0.25rem; /* 4 */
+    --rule-gap: -0.4375rem; /* rule 28 below the heading top */
+    --edu-rule-gap: -0.625rem; /* 25 below */
+    --edu-list-gap: 1.3125rem; /* 21 */
+    --edu-entry-gap: 3.375rem; /* 54 */
+    --edu-title-size: 1.0625rem; /* 17 */
+    --edu-title-lead: 1.875rem; /* 30 */
+    --edu-title-track: 0.1275rem; /* 2.04 */
+    --edu-period-size: 0.9375rem; /* 15 */
+    --edu-period-lead: 1.625rem; /* 26 */
+    --edu-period-track: 0.1125rem; /* 1.8 */
+    --edu-org-size: 0.6875rem; /* 11 */
+    --edu-org-lead: 1.1875rem; /* 19 */
+    --edu-org-track: 0.0825rem; /* 1.32 */
+    --edu-desc-gap: 1rem; /* 16 */
+    --edu-desc-track: 0.1125rem; /* 1.8 */
+    --edu-desc1-track: 0.16875rem; /* 2.7 */
+    --skills-y: 61rem; /* 976 */
+    --hobbies-y: 75rem; /* 1200 */
+    --col-1: 15.75rem; /* 252 */
+    --col-2: 39.0625rem; /* 625 */
+    --col-3: 66.125rem; /* 1058 */
+    --col-1-w: 12.875rem; /* 206 */
+    --col-2-w: 12.875rem; /* 206 */
+    --col-3-w: 8.125rem; /* 130 */
+    --col-4-w: 6.6875rem; /* 107 */
+    --list-gap: 2.6875rem; /* 43 */
+    --list-gap-tight: 1.9375rem; /* 31 */
+    --list-gap-tighter: 1.8125rem; /* 29 */
+    --list-size: 0.9375rem; /* 15 */
+    --list-lead: 1.875rem; /* 30 */
+    --list-track: 0.1125rem; /* 1.8 */
+    --list-pad: 1.40625rem; /* 22.5 */
+    --cta-y: 92.5625rem; /* 1481 */
+    --cta-size: 0.875rem; /* 14 */
+    --cta-track: 0.105rem; /* 1.68 */
+    --cta-gap: 0.625rem; /* 10 */
+    --cta-pad: 0.875rem 1.75rem; /* 14 / 28 */
+  }
+}
+
+@media (min-width: 1728px) {
+  .page {
+    --page-h: 116.25rem; /* 1860 */
+    --wt-y: 8.4375rem; /* 135 */
+    --wt-w: calc(50% - 4.6304rem); /* right edge at stage 885.913 */
+    --wt-h: 67.8035rem; /* 1084.856 */
+    --wb-x: 0;
+    --wb-y: 55.6875rem; /* 891 */
+    --wb-w: 100%;
+    --wb-h: 65.1875rem; /* 1043 */
+    --portrait-x: 23.3125rem; /* 373 */
+    --portrait-y: 13.625rem; /* 218 */
+    --portrait-w: 23.5rem; /* 376 */
+    --portrait-h: 46.4375rem; /* 743 */
+    --col-b: 58.375rem; /* 934 */
+    --intro-head-y: 16.5625rem; /* 265 */
+    --intro-head-size: 2.8125rem; /* 45 */
+    --intro-head-track: 0.50625rem; /* 8.1 */
+    --intro-body-y: 21.5rem; /* 344 */
+    --intro-body-w: 37.8125rem; /* 605 */
+    --intro-body-track: 0.2025rem; /* 3.24 */
+    --body-size: 1.125rem; /* 18 */
+    --body-lead: 1.875rem; /* 30 */
+    --edu-y: 31.375rem; /* 502 */
+    --edu-w: 37.8125rem; /* 605 */
+    --edu-desc-w: 34.875rem; /* 558 */
+    --head-size: 1.5625rem; /* 25 */
+    --head-line: 2.75rem; /* 44 */
+    --head-track: 0.28125rem; /* 4.5 */
+    --rule-h: 0.25rem; /* 4 */
+    --rule-gap: -0.5625rem; /* rule 35 below the heading top */
+    --edu-rule-gap: -0.6875rem; /* 33 below */
+    --edu-list-gap: 1.1875rem; /* 19 */
+    --edu-entry-gap: 3.875rem; /* 62 */
+    --edu-title-size: 1.25rem; /* 20 */
+    --edu-title-lead: 1.9375rem; /* 31 */
+    --edu-title-track: 0.15rem; /* 2.4 */
+    --edu-period-size: 1.125rem; /* 18 */
+    --edu-period-lead: 1.625rem; /* 26 */
+    --edu-period-track: 0.135rem; /* 2.16 */
+    --edu-org-size: 0.8125rem; /* 13 */
+    --edu-org-lead: 1.3125rem; /* 21 */
+    --edu-org-track: 0.0975rem; /* 1.56 */
+    --edu-desc-gap: 1.375rem; /* 22 */
+    --edu-desc-track: 0.135rem; /* 2.16 */
+    --edu-desc1-track: 0.2025rem; /* 3.24 */
+    --skills-y: 66.625rem; /* 1066 */
+    --hobbies-y: 80.625rem; /* 1290 */
+    --col-1: 23.3125rem; /* 373 */
+    --col-2: 52.6875rem; /* 843 */
+    --col-3: 86.8125rem; /* 1389 */
+    --col-1-w: 15.5rem; /* 248 */
+    --col-2-w: 12.875rem; /* 206 */
+    --col-3-w: 9.125rem; /* 146 */
+    --col-4-w: 8rem; /* 128 */
+    --list-gap: 2.25rem; /* 36 */
+    --list-gap-tight: 1.5rem; /* 24 */
+    --list-gap-tighter: 1.375rem; /* 22 */
+    --list-size: 1.125rem; /* 18 */
+    --list-lead: 1.875rem; /* 30 */
+    --list-track: 0.135rem; /* 2.16 */
+    --list-pad: 1.6875rem; /* 27 */
+    --cta-y: 102.875rem; /* 1646 */
+    --cta-size: 0.875rem; /* 14 */
+    --cta-track: 0.105rem; /* 1.68 */
+    --cta-gap: 0.625rem; /* 10 */
+    --cta-pad: 0.875rem 1.75rem; /* 14 / 28 */
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1199.98px) {
+  .page {
+    --page-h: 65.625rem; /* 1050 */
+    --wt-y: 4.625rem; /* 74 */
+    --wt-w: calc(50% + 0.875rem); /* right edge at stage 398 */
+    --wt-h: 30.375rem; /* 486 */
+    --wb-x: 0;
+    --wb-y: 32.6875rem; /* 523 */
+    --wb-w: 100%;
+    --wb-h: 32.9063rem; /* 526.5 */
+    --portrait-x: 6.1875rem; /* 99 */
+    --portrait-y: 6.4375rem; /* 103 */
+    --portrait-w: 13.6731rem; /* 218.769 */
+    --portrait-h: 27.0625rem; /* 433 */
+    --col-b: 21.625rem; /* 346 */
+    --intro-head-y: 8.4375rem; /* 135 */
+    --intro-head-size: 1.4375rem; /* 23 */
+    --intro-head-track: 0.25875rem; /* 4.14 */
+    --intro-body-y: 11.25rem; /* 180 */
+    --intro-body-w: 19.3125rem; /* 309 */
+    --intro-body-track: 0.1125rem; /* 1.8 */
+    --body-size: 0.5625rem; /* 9 */
+    --body-lead: 1.125rem; /* 18 */
+    --edu-y: 17rem; /* 272 */
+    --edu-w: 19.6875rem; /* 315 */
+    --edu-desc-w: 19.625rem; /* 314 */
+    --head-size: 0.75rem; /* 12 */
+    --head-line: 1.125rem; /* 18 */
+    --head-track: 0.135rem; /* 2.16 */
+    --rule-h: 0.1875rem; /* 3 */
+    --rule-gap: -0.0625rem; /* rule 17 below the heading top */
+    --edu-rule-gap: 0.0625rem; /* 19 below */
+    --edu-list-gap: 1.375rem; /* 22 */
+    --edu-entry-gap: 1.75rem; /* 28 */
+    --edu-title-size: 0.75rem; /* 12 */
+    --edu-title-lead: 1.125rem; /* 18 */
+    --edu-title-track: 0.09rem; /* 1.44 */
+    --edu-period-size: 0.75rem; /* 12 */
+    --edu-period-lead: 0.8125rem; /* 13 */
+    --edu-period-track: 0.09rem; /* 1.44 */
+    --edu-org-size: 0.5rem; /* 8 */
+    --edu-org-lead: 0.8125rem; /* 13 */
+    --edu-org-track: 0.06rem; /* 0.96 */
+    --edu-desc-gap: 0.625rem; /* 10 */
+    --edu-desc-track: 0.0675rem; /* 1.08 */
+    --edu-desc1-track: 0.0675rem; /* 1.08 — the two match at this size */
+    --skills-y: 36.625rem; /* 586 */
+    --hobbies-y: 47.25rem; /* 756 */
+    --col-1: 6.1875rem; /* 99 */
+    --col-2: 20.6875rem; /* 331 */
+    --col-3: 36.4375rem; /* 583 */
+    --col-1-w: 8.5rem; /* 136 */
+    --col-2-w: 7rem; /* 112 */
+    --col-3-w: 4.875rem; /* 78 */
+    --col-4-w: 4.0625rem; /* 65 */
+    --list-gap: 0.625rem; /* 10 — all four columns line up here */
+    --list-gap-tight: 0.625rem;
+    --list-gap-tighter: 0.625rem;
+    --list-size: 0.625rem; /* 10 */
+    --list-lead: 1.5625rem; /* 25 */
+    --list-track: 0.075rem; /* 1.2 */
+    --list-pad: 0.9375rem; /* 15 */
+    --cta-y: 59.4375rem; /* 951 */
+    --cta-size: 0.5rem; /* 8 */
+    --cta-track: 0.06rem; /* 0.96 */
+    --cta-gap: 0.5625rem; /* 9 */
+    --cta-pad: 0.4375rem 0.4375rem 0.3125rem 0.625rem; /* 7 / 7 / 5 / 10 */
+  }
+}
+
+/* 390 restacks the page into one narrow column: the portrait becomes a circle,
+   the intro centres, and each skills group runs as two columns instead of
+   sitting beside its neighbours. */
+@media (max-width: 767.98px) {
+  .page {
+    --page-h: 95.75rem; /* 1532 */
+    --wt-y: 4.3125rem; /* 69 */
+    --wt-w: calc(50% + 2.6875rem); /* right edge at stage 238 */
+    --wt-h: 18.125rem; /* 290 */
+    --wb-x: 0;
+    --wb-y: 24.125rem; /* 386 */
+    --wb-w: 100%;
+    --wb-h: 29.2289rem; /* 467.663 */
+    --portrait-x: 5.375rem; /* 86 */
+    --portrait-y: 6.6875rem; /* 107 */
+    --portrait-w: 13.6875rem; /* 219 */
+    --portrait-h: 13.6875rem; /* 219 */
+    --col-b: 0;
+    --intro-head-y: 22.4375rem; /* 359 */
+    --intro-head-size: 1.125rem; /* 18 */
+    --intro-head-track: 0.2025rem; /* 3.24 */
+    --intro-body-y: 25.375rem; /* 406 */
+    --intro-body-w: 19.3125rem; /* 309 */
+    --intro-body-track: 0.1125rem; /* 1.8 */
+    --body-size: 0.625rem; /* 10 */
+    --body-lead: 1.3125rem; /* 21 */
+    --edu-y: 34.0625rem; /* 545 */
+    --edu-w: 19.3125rem; /* 309 */
+    --edu-desc-w: 19.25rem; /* 308 */
+    --head-size: 0.6875rem; /* 11 */
+    --head-line: 1.125rem; /* 18 */
+    --head-track: 0.12375rem; /* 1.98 */
+    --rule-h: 0.1875rem; /* 3 */
+    --rule-gap: -0.1875rem; /* rule 15 below the heading top */
+    --edu-rule-gap: -0.125rem; /* 17 below */
+    --edu-list-gap: 1.125rem; /* 18 */
+    --edu-entry-gap: 1.9375rem; /* 31 */
+    --edu-title-size: 0.6875rem; /* 11 */
+    --edu-title-lead: 1.125rem; /* 18 */
+    --edu-title-track: 0.0825rem; /* 1.32 */
+    --edu-period-size: 0.6875rem; /* 11 */
+    --edu-period-lead: 1.125rem;
+    --edu-period-track: 0.0825rem;
+    --edu-org-size: 0.5rem; /* 8 */
+    --edu-org-lead: 0.6875rem; /* 11 */
+    --edu-org-track: 0.06rem; /* 0.96 */
+    --edu-desc-gap: 0.75rem; /* 12 */
+    --edu-desc-track: 0.0675rem; /* 1.08 */
+    --edu-desc1-track: 0.0675rem;
+    --skills-y: 54.125rem; /* 866 — My Skills */
+    --dev-y: 67.25rem; /* 1076 */
+    --lang-y: 77.0625rem; /* 1233 */
+    --hobbies-y: 77.0625rem; /* 1233 */
+    --col-1: 2.5625rem; /* 41 */
+    --col-2: 2.625rem; /* 42 */
+    --col-3: 2.625rem; /* 42 */
+    --col-1-w: 19.3125rem; /* 41 -> 350, two columns inside */
+    --col-2-w: 17.75rem; /* 42 -> 326, two columns inside */
+    --col-3-w: 4.875rem; /* 78 */
+    --col-4-w: 4.0625rem; /* 65 */
+    --list-gap: 0.75rem; /* 12 */
+    --list-gap-tight: 0.75rem;
+    --list-gap-tighter: 0.75rem;
+    --list-size: 0.625rem; /* 10 */
+    --list-lead: 1.5625rem; /* 25 */
+    --list-track: 0.075rem; /* 1.2 */
+    --list-pad: 0.9375rem; /* 15 */
+    --cta-y: 90.375rem; /* 1446 */
+    --cta-size: 0.5rem; /* 8 */
+    --cta-track: 0.06rem; /* 0.96 */
+    --cta-gap: 0.5625rem; /* 9 */
+    --cta-pad: 0.4375rem 0.4375rem 0.3125rem 0.625rem; /* 7 / 7 / 5 / 10 */
+  }
+
+  /* A circular crop here rather than the tall rectangle of the other bands.
+     next/image sizes a filled image with inline styles, so the framing is set
+     through object-position instead of by re-sizing it. */
+  .portrait {
+    overflow: hidden;
+    border-radius: 50%;
+  }
+
+  .portrait img {
+    object-position: center 22%;
+  }
+
+  /* The intro is centred on the frame rather than ranged off a column. */
+  .introHeading,
+  .introBody {
+    left: 50%;
+    width: 100%;
+    text-align: center;
+    transform: translateX(-50%);
+  }
+
+  .introHeading {
+    white-space: normal;
+  }
+
+  .introBody {
+    width: var(--intro-body-w);
+  }
+
+  .education {
+    left: 2.5625rem; /* 41 */
+  }
+
+  /* Figma splits these two groups across a pair of lists; letting the one list
+     flow into two columns gets the same shape from the same markup. It divides
+     the items evenly, so My Skills reads 6/5 where the frame shows 5/6. */
+  .colDesign .list,
+  .colDevelopment .list {
+    columns: 2;
+    column-gap: 2.3125rem; /* 37 */
+  }
+
+  .colDevelopment {
+    left: var(--col-2);
+  }
+
+  .colHobbies {
+    left: 13.375rem; /* 214 */
+  }
+
+  .waveFoot {
+    display: block;
+    position: absolute;
+    top: 85rem; /* 1360 */
+    left: 0;
+    width: 100%;
+    height: 12.5rem; /* 200 */
+  }
+}
