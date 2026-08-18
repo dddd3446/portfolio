@@ -91,49 +91,54 @@ export default async function ArtworkDetailPage({ params }: Props) {
     <main className={s.page}>
       <ArtworkSwipe prev={prev?.slug} next={next?.slug} />
 
-      <div className={s.stage} data-swipe-stage>
+      <div className={s.stage}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={s.rings} src="/assets/decor/rings-detail.svg" alt="" aria-hidden />
 
-        <div className={s.figure}>
-          {work.youtubeId ? (
-            /* nocookie: YouTube then sets nothing until the visitor actually
-               presses play, which keeps the page clear of a consent banner.
-               The player is the one thing on this route worth a live frame,
-               so it is not lazy — it is the whole reason the page exists. */
-            <iframe
-              className={s.video}
-              src={`https://www.youtube-nocookie.com/embed/${work.youtubeId}?rel=0`}
-              title={titleFor(work)}
-              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-              referrerPolicy="strict-origin-when-cross-origin"
-              allowFullScreen
-            />
-          ) : (
-            <Image
-              src={work.src}
-              alt={work.alt}
-              fill
-              sizes="(min-width: 1200px) 680px, (min-width: 768px) 454px, 278px"
-              quality={90}
-              priority
-            />
+        {/* Only the piece travels on a swipe. The rings, the arrows and the
+            close control belong to the viewer rather than to the work, so
+            they stay put and the page appears to turn inside them. */}
+        <div className={s.piece} data-swipe-stage>
+          <div className={s.figure}>
+            {work.youtubeId ? (
+              /* nocookie: YouTube then sets nothing until the visitor actually
+                 presses play, which keeps the page clear of a consent banner.
+                 The player is the one thing on this route worth a live frame,
+                 so it is not lazy — it is the whole reason the page exists. */
+              <iframe
+                className={s.video}
+                src={`https://www.youtube-nocookie.com/embed/${work.youtubeId}?rel=0`}
+                title={titleFor(work)}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            ) : (
+              <Image
+                src={work.src}
+                alt={work.alt}
+                fill
+                sizes="(min-width: 1200px) 680px, (min-width: 768px) 454px, 278px"
+                quality={90}
+                priority
+              />
+            )}
+          </div>
+
+          <h1 className={s.title}>{titleFor(work)}</h1>
+          {content?.description && <p className={s.description}>{content.description}</p>}
+
+          {content && content.meta.length > 0 && (
+            <dl className={s.meta}>
+              {content.meta.map((field) => (
+                <div className={s.metaField} key={field.label}>
+                  <dt>{field.label}</dt>
+                  <dd>{field.value}</dd>
+                </div>
+              ))}
+            </dl>
           )}
         </div>
-
-        <h1 className={s.title}>{titleFor(work)}</h1>
-        {content?.description && <p className={s.description}>{content.description}</p>}
-
-        {content && content.meta.length > 0 && (
-          <dl className={s.meta}>
-            {content.meta.map((field) => (
-              <div className={s.metaField} key={field.label}>
-                <dt>{field.label}</dt>
-                <dd>{field.value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
 
         {prev && (
           <Link className={`${s.arrow} ${s.prev}`} href={`/artwork/${prev.slug}`} rel="prev">

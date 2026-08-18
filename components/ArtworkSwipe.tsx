@@ -8,12 +8,17 @@ import { useEffect } from "react";
  *
  * The arrows are the same journey and stay where they are — this is the
  * gesture a phone expects for a thing you page through, not a replacement for
- * them. Renders nothing; it moves the stage and listens.
+ * them. Renders nothing; it moves the piece and listens.
  *
- * The composition follows the finger while the gesture is happening, leaves in
- * the direction it was thrown, and the piece that replaces it arrives from the
- * far side. Without that the swipe was a switch rather than a movement: you
- * let go and the screen had already changed, with nothing to connect the two.
+ * Only the piece moves: the image, its title, the write-up and the camera
+ * fields. The rings behind it, the arrows and the close control hold still, so
+ * the work is carried through a viewer that stays where it was rather than the
+ * whole screen sliding away and coming back.
+ *
+ * The piece follows the finger while the gesture is happening, leaves in the
+ * direction it was thrown, and the one that replaces it arrives from the far
+ * side. Without that the swipe was a switch rather than a movement: you let go
+ * and the screen had already changed, with nothing to connect the two.
  *
  * Touch events are the whole gate: they do not fire for a mouse, so the
  * gesture arrives on phones and tablets and stays out of the way everywhere
@@ -34,7 +39,7 @@ const DIRECTION_BIAS = 1.5;
  *  still ambiguous, and guessing early makes a tap feel like it slipped. */
 const AXIS_LOCK = 10;
 
-/** The stage trails the finger rather than matching it, so the drag has some
+/** The piece trails the finger rather than matching it, so the drag has some
  *  weight and the edge of the screen never quite arrives. */
 const DRAG_FOLLOW = 0.55;
 
@@ -50,14 +55,14 @@ export default function ArtworkSwipe({ prev, next }: { prev?: string; next?: str
   const router = useRouter();
 
   useEffect(() => {
-    const stage = document.querySelector<HTMLElement>("[data-swipe-stage]");
-    if (!stage) return;
+    const piece = document.querySelector<HTMLElement>("[data-swipe-stage]");
+    if (!piece) return;
 
     const still = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const move = (value: string, ms: number) => {
-      stage.style.transition = ms ? `transform ${ms}ms cubic-bezier(0.22, 0.61, 0.36, 1)` : "none";
-      stage.style.transform = `translateX(${value})`;
+      piece.style.transition = ms ? `transform ${ms}ms cubic-bezier(0.22, 0.61, 0.36, 1)` : "none";
+      piece.style.transform = `translateX(${value})`;
     };
 
     // Arriving from a swipe: come in from the side the last piece left towards.
@@ -78,8 +83,8 @@ export default function ArtworkSwipe({ prev, next }: { prev?: string; next?: str
       // was finally looked at. Clearing the transform lands on exactly the
       // resting state, so this is safe whether or not the animation ran.
       backstop = window.setTimeout(() => {
-        stage.style.transition = "";
-        stage.style.transform = "";
+        piece.style.transition = "";
+        piece.style.transform = "";
       }, ENTER_MS + 400);
     }
 

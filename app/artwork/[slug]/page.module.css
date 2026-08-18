@@ -44,6 +44,24 @@
   height: calc(var(--rings-size) * var(--u));
 }
 
+/* The piece itself: the image, its title, the write-up and the camera
+   fields. A swipe carries this and nothing else — the rings, the arrows and
+   the close control are the viewer the work sits in, and a viewer that slides
+   off with its contents stops reading as one. Laid exactly over the stage, so
+   everything inside keeps the coordinates it had as a direct child of it.
+
+   It covers the controls, so clicks fall through it and its children take them
+   back: the YouTube player needs them, and the rest cost nothing. */
+.piece {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.piece > * {
+  pointer-events: auto;
+}
+
 .figure {
   position: absolute;
   left: 50%;
