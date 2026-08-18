@@ -215,7 +215,7 @@ export const CATEGORIES: Category[] = [
     align: { w390: "left", w768: "left", w1440: "left", w1920: "left" },
     headingWeight: 600,
     headingTrack: { w390: 2.4, w768: 2.4, w1440: 2.4, w1920: 2.4 },
-    bodyTrack: { w390: 2.4, w768: 2.4, w1440: 2.4, w1920: 2.4 },
+    bodyTrack: { w390: 0.96, w768: 0.96, w1440: 1.44, w1920: 1.8 },
     bodyLeading: { w390: 15, w768: 15, w1440: 29, w1920: 29 },
   },
   {

@@ -302,9 +302,15 @@
     --rings-x: -234;
     --rings-y: -34;
     --rings-size: 858;
-    --fig-y: 191;
-    --fig-w: 278;
-    --fig-h: 185;
+    /* The phone frame left ~100 design px of empty ground between the close
+       control and the top of the image box, and the box itself was landscape,
+       so an upright piece was drawn barely half the width of the frame. The
+       box now starts just under the close control and keeps its old bottom
+       edge, which is what buys the height back; its width stops short of the
+       arrows. Nothing below it moves. */
+    --fig-y: 105;
+    --fig-w: 300;
+    --fig-h: 271;
     --title-y: 402;
     --desc-y: 456;
     --desc-w: 278;
@@ -319,7 +325,7 @@
     --meta-dir: column;
     --meta-align: center;
     --meta-justify: center;
-    --arrow-y: 269;
+    --arrow-y: 226;
     --arrow-w: 16;
     --arrow-h: 30;
     --edge: 24;
