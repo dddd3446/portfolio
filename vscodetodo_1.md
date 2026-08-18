@@ -332,7 +332,7 @@ meta 是空陣列時整條 meta 列不會渲染(`app/artwork/[slug]/page.tsx` �
 
 **檔案**:`portfolio/lib/artwork-content.ts`
 
-**對照工具**:`http://localhost:3000/preview/artwork` —— 這是一個開發用的對照頁,把 49 張縮圖並排顯示,每張圖下面就是它對應的 key。已經寫好的卡片會標成綠色,最上面有「N of 48 written」的進度。沒有這個頁面的話,`vp-17` 這種 key 根本認不出是哪張圖。(這頁沒有任何連結指向它,之後可以直接刪掉。)
+**對照工具(已移除)**:填文案期間有一個開發用的對照頁 `/preview/artwork`,把 49 張縮圖並排、標出各自的 key。48 件全部寫完之後它就沒有用途了,而且部署後任何知道網址的人都打得開,所以在 2026-08-18 連同 `/preview` 一起刪掉。要再認 `vp-17` 是哪張圖,看 `lib/artwork-content.ts` 每一筆上方的註解,那裡標了對應的圖檔名與內容描述。
 
 每一筆的格式(檔案裡每一筆上方都已經標好對應的圖檔名跟內容描述):
 
@@ -486,7 +486,7 @@ meta 是空陣列時整條 meta 列不會渲染(`app/artwork/[slug]/page.tsx` �
 
 - **`lib/artwork-content.ts` 的 key 一個都沒動**,還是 `vp-01`、`the-duck` 這些;這兩份文件裡的所有引用也全部繼續有效。
 - 唯一被迫調整的是 The Duck:它的 `id` 本來是 `vp-the-duck`,跟文案 key `the-duck` 對不上,已改成 `the-duck` 讓兩者一致。
-- 三個檔案的查找改成用 `id`:`app/artwork/page.tsx`、`app/preview/artwork/page.tsx`、`app/artwork/[slug]/page.tsx`。連結與 `generateStaticParams` 則繼續用 `slug`。
+- 三個檔案的查找改成用 `id`:`app/artwork/page.tsx`、`app/artwork/[slug]/page.tsx`,以及當時還在的 `app/preview/artwork/page.tsx`(該頁後來已刪除)。連結與 `generateStaticParams` 則繼續用 `slug`。
 - `sameAs` 存的是 `id`(值本來就是 `vp-08`,不用改)。列表頁遇到 `sameAs` 的圖塊時會先找出擁有者,再拿它的 `slug` 當連結——所以那兩個共用圖塊都指向 `/artwork/freshwater-shelf`。
 - `vp-11` 是第二次裁切、永遠不會有自己的網址,它的 `slug` 就留著沒動。
 
@@ -495,7 +495,7 @@ meta 是空陣列時整條 meta 列不會渲染(`app/artwork/[slug]/page.tsx` �
 - 48 個新網址**全部回 200**;舊的 `/artwork/vp-01` 回 404(預期,因為從沒公開過)。
 - 上一件 / 下一件的環狀鏈:**48 件、無重複、繞得回起點、prev 與 next 對稱**。
 - 列表頁 49 個圖塊 → **48 個不重複網址**,共用裁切的那兩塊都指向同一個。
-- `/preview/artwork` 顯示的仍然是文案檔的 key(`vp-01`),不是網址,所以它照樣能拿來對照。
+- 當時 `/preview/artwork` 顯示的仍然是文案檔的 key(`vp-01`)而不是網址,所以換 slug 沒有影響它的對照功能。(該頁後來已刪除。)
 
 ### 以後改標題會怎樣
 

@@ -122,10 +122,7 @@ portfolio/
 │   ├── artwork/
 │   │   ├── page.tsx            Artwork 列表(資料驅動的手排畫布)
 │   │   └── [slug]/page.tsx     作品詳情全螢幕疊層
-│   ├── resume/  contact/       各自 page.tsx + page.module.css
-│   └── preview/
-│       ├── page.tsx            開發用:多裝置寬度預覽
-│       └── artwork/page.tsx    開發用:49 張縮圖對照 content key
+│   └── resume/  contact/       各自 page.tsx + page.module.css
 ├── components/
 │   ├── SiteChrome.tsx          決定哪些路由要套 header/footer
 │   ├── Header.tsx / Footer.tsx 全站共用
@@ -138,10 +135,8 @@ portfolio/
 └── public/assets/
     ├── images/artwork/ (48 檔) home/ resume/
     ├── decor/ (波浪與同心圓 SVG)  icons/  brand/  cv/(CV PDF 在這)
-    └── _unused/                被取代掉的匯出檔,留著備查
+    └── _unused/                被取代掉的匯出檔,留在硬碟但已不在版控
 ```
-
-`/preview` 跟 `/preview/artwork` 是開發用的,沒有任何連結指向它們,之後可以直接刪。
 
 ### 四個值得知道的實作決定
 
