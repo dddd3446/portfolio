@@ -35,6 +35,12 @@ export const metadata: Metadata = {
     locale: "en_US",
   },
   twitter: { card: "summary_large_image" },
+  /* Proves to Search Console that whoever asks for the crawl data owns the
+     site. It is a public token by design — it only means anything paired with
+     the Google account that issued it — and it is tied to the exact origin it
+     was issued for, so renaming the Vercel project needs a new property and a
+     new token here. */
+  verification: { google: "naVT_CBHLCQIwy5dzORiAVcQCJNmt8Hd2TuQSGmp_2Y" },
 };
 
 export default function RootLayout({
