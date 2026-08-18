@@ -36,10 +36,12 @@ export const metadata: Metadata = {
   },
   twitter: { card: "summary_large_image" },
   /* Proves to Search Console that whoever asks for the crawl data owns the
-     site. It is a public token by design — it only means anything paired with
-     the Google account that issued it — and it is tied to the exact origin it
-     was issued for, so renaming the Vercel project needs a new property and a
-     new token here. */
+     site. Public by design: the token means nothing except paired with the
+     Google account it was issued to, which is also why it survives a move —
+     issued against the old vercel.app name, it verified the renamed one on
+     its own, with no redeploy. A Search Console property is still pinned to
+     one origin, so a new domain needs a new property, but this line is not
+     what has to change. */
   verification: { google: "naVT_CBHLCQIwy5dzORiAVcQCJNmt8Hd2TuQSGmp_2Y" },
 };
 

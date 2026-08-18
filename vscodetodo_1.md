@@ -11,9 +11,9 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 
 待辦 3 ~ 7 是最早整理的那批(全部已完成),待辦 8 ~ 13 是 2026-08-18 補上的,大多是**要屋主提供內容或拍板**、不是程式端的工作。待辦 14 ~ 18 是同日實測後補的;待辦 19 ~ 20 是 2026-08-19 上線後補的。
 
-**待辦 3 ~ 19 全部結案。待辦 20 只剩一件**:把 Vercel 那個亂數網址改成好唸的名字 —— 那是屋主到後台點幾下的事,程式端已經做完而且不受它影響。
+**所有待辦都已結案(3 ~ 20)。** 網站上線在 **`https://chaigaifoon.vercel.app`**,分享預覽卡、sitemap、robots、Search Console 都做完了。
 
-**已推上 GitHub**:`https://github.com/dddd3446/portfolio`(public),接 Vercel 自動部署,線上已確認正常。
+**已上線**:`https://chaigaifoon.vercel.app` ← Vercel;原始碼 `https://github.com/dddd3446/portfolio`(public),推上 main 即自動部署。
 
 各頁面的 frame id、技術棧、程式結構請看 `PROJECT_CONTEXT.md`,這份不重複。
 
@@ -881,7 +881,7 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 
 ## 待辦 20:上線後的分享與搜尋 —— OG 預覽卡、sitemap / robots、Vercel 網址
 
-**狀態:第 1、2 件 ✅ 已完成,Search Console 也已驗證並提交 sitemap(2026-08-19);第 3 件 ⬜ 待屋主自己在 Vercel 後台改。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。**
+**狀態:✅ 三件全部完成(2026-08-19)。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。**
 
 > **原本卡住的「要先知道 production 網址」後來繞掉了。** 見本節末尾「動手前必須先確定的」第 (c) 點 —— 網址完全沒有寫死,改從環境變數讀,所以第 3 件什麼時候做、做不做,都不影響第 1、2 件。實作與實測見「最後怎麼做的」。
 
@@ -902,7 +902,7 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 
 **做的時候要注意的**:`app/artwork/[slug]/page.tsx` 裡的 `published()` 是 module 內的私有函式,它含有「跳過 `sameAs` 的重複裁切」「series 要連在一起」這些規則,**它才是「哪些 slug 真的存在」的唯一答案**。sitemap 若自己另寫一份篩選邏輯,兩邊遲早會不一致,結果是把 404 的網址提交給 Google。正確做法是把 `published()` 抽到 `lib/` 讓兩邊共用 —— 這會動到已經上線正常的檔案,要小心。
 
-### 3. Vercel 網址是系統亂數名 ⬜(屋主自己在後台改)
+### 3. Vercel 網址是系統亂數名 ✅
 
 屋主截圖上是 `…paz-zeta-70.vercel.app`。Vercel 專案設定裡可以改成好唸的(免費、幾秒鐘),寫在履歷上差很多。要自訂網域則要另外買。
 
@@ -977,17 +977,32 @@ verification: { google: "naVT_CBHLCQIwy5dzORiAVcQCJNmt8Hd2TuQSGmp_2Y" },
 
 ### 還沒處理的
 
-**第 3 件:Vercel 網址改名**,要屋主自己到後台做 —— Settings → General → Project Name,或 Settings → Domains 直接加一個 `xxx.vercel.app`。`.vercel.app` 的名字全 Vercel 唯一,好念的常被佔走。
+**已完成(2026-08-19)。** 網址從 `portfolio-topaz-zeta-70.vercel.app` 改成 **`chaigaifoon.vercel.app`**,舊網址設成 307 轉址到新的(Vercel 的 Edit domain 對話框裡選「Redirect old domain to new」,不要選「Remove old domain」)。
 
-**程式端不用動**,重新部署時 `VERCEL_PROJECT_PRODUCTION_URL` 會自己帶新網域進來 —— 這點上面已經實測過。
+**輸入時踩到的坑**:網域名稱**不能有空格**,只能用英文字母、數字、連字號 `-`。第一次打成 `portfolio chai gai foon`,Vercel 回 `Cannot add invalid domain name` —— 那不是名稱被佔用,是格式不合。
 
-**但 Search Console 那邊要整套重做**,因為「網址前綴」資源綁死確切網址:
+**改完網域之後一定要重新部署一次。** 這點很容易漏:`VERCEL_PROJECT_PRODUCTION_URL` 是**建置時**讀的,而這個站是靜態產生的 —— sitemap、robots、每一頁的 og:image 在 build 當下就寫成檔案了。後台改網域**不會**觸發重建,Vercel 只是把新網域指向同一份舊產物。實測改名後立刻去看,線上 robots 還寫著舊網址。到 Deployments → 最新那筆 → ⋯ → Redeploy(取消勾選 Use existing Build Cache)之後才對。
 
-1. 新增資源(用新網址)→ 選「網址前綴」→ HTML 標記
-2. 拿**新的** token 換掉 `app/layout.tsx` 裡那一行,推上去
-3. 按驗證 → 重新提交 `sitemap.xml`
+**重建後實測(對新網域跑的)**:
 
-> **所以改名要趁早。** 現在只是重跑一次上面三步;等 Google 真的開始索引、或等有人拿著舊連結之後再改,成本才會變高。
+| 檢查 | 結果 |
+|---|---|
+| `robots.txt` | `Sitemap: https://chaigaifoon.vercel.app/sitemap.xml` |
+| `og:image` | 指向新網域 |
+| sitemap 筆數 | 52,**舊網域殘留 0 筆** |
+| **52 個新網址逐一實連** | **全部 200** |
+| 舊網址 | 307 → `chaigaifoon.vercel.app` |
+
+**程式一行都沒改** —— 這就是 `SITE_URL` 不寫死的回報。
+
+**Search Console 比預期簡單:token 不用換。** 原本以為驗證 token 綁死主機名、改網域要重發一組,**實際不是** —— Google 的驗證 token 是綁**帳號**的。新增 `https://chaigaifoon.vercel.app` 這個「網址前綴」資源時,因為網站上本來就有那個 `<meta name="google-site-verification">`,Google **直接自動完成驗證**,不用改程式也不用重新部署。所以改名時 Search Console 要做的只有兩件事:
+
+1. 新增資源(用新網址)→ 選「網址前綴」→ 自動驗證通過
+2. 重新提交 `sitemap.xml`
+
+舊資源(`portfolio-topaz-zeta-70`)可以直接刪掉,它現在只是個轉址。
+
+> **教訓**:這一節原本寫著「拿新的 token 換掉 `app/layout.tsx`」,是錯的,已改。同樣的錯誤也寫進了 `app/layout.tsx` 的註解裡,一併修掉了 —— 猜測寫成斷言,下次讀的人就會照著做多餘的工。
 
 ---
 
