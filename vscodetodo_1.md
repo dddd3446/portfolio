@@ -881,11 +881,11 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 
 ## 待辦 20:上線後的分享與搜尋 —— OG 預覽卡、sitemap / robots、Vercel 網址
 
-**狀態:第 1、2 件 ✅ 已完成(2026-08-19);第 3 件 ⬜ 待屋主自己在 Vercel 後台改。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。**
+**狀態:第 1、2 件 ✅ 已完成,Search Console 也已驗證並提交 sitemap(2026-08-19);第 3 件 ⬜ 待屋主自己在 Vercel 後台改。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。**
 
 > **原本卡住的「要先知道 production 網址」後來繞掉了。** 見本節末尾「動手前必須先確定的」第 (c) 點 —— 網址完全沒有寫死,改從環境變數讀,所以第 3 件什麼時候做、做不做,都不影響第 1、2 件。實作與實測見「最後怎麼做的」。
 
-### 1. 分享預覽(Open Graph)完全沒有 ⬜
+### 1. 分享預覽(Open Graph)完全沒有 ✅
 
 `app/layout.tsx` 目前只有 `title` 和 `description`,**沒有 `metadataBase`、沒有 `openGraph`、沒有 `twitter`**,`app/` 底下也沒有 `opengraph-image`。
 
@@ -896,7 +896,7 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 - 每頁的 `title` / `description` 已經寫好了(`app/artwork/page.tsx`、`resume`、`contact` 各有 `metadata`,詳情頁有 `generateMetadata` 會帶入作品標題與敘述)。**`openGraph` 若不特別指定,Next 會沿用這些**,所以文字部分不用重寫,補圖和 `metadataBase` 就好。
 - **不要**把 OG 圖指向作品原圖。48 張 PNG 共 28MB:5 張超過 1MB(最大 3.3MB)、25 張在 300KB–1MB。WhatsApp / Telegram 這類 app 對預覽圖有實務上的大小上限(約 300KB),直接指原圖會有一半以上的作品頁**分享出去沒有預覽**。「每件作品各自的預覽圖」要做就得另外產縮圖,建議第一輪不做,先做全站一張。
 
-### 2. 沒有 `sitemap.ts` / `robots.ts` ⬜
+### 2. 沒有 `sitemap.ts` / `robots.ts` ✅
 
 全站 55 頁,其中 48 頁是作品詳情頁。目前 Google 只能靠爬站內連結去發現它們。Next.js 各加一個檔、十幾行就好。
 
@@ -943,9 +943,51 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 
 **驗過**:`tsc` / `eslint` 乾淨,`next build` 從 55 頁變 58 頁(多了 `/opengraph-image.jpg`、`/robots.txt`、`/sitemap.xml`)。
 
+### Search Console:驗證與提交 sitemap(2026-08-19)
+
+網址是 **`https://portfolio-topaz-zeta-70.vercel.app`**(`portfolio-` 是專案名,`topaz-zeta-70` 是 Vercel 補的亂數,因為 `portfolio.vercel.app` 早被佔走)。
+
+**先踩到一個死路,記下來免得再踩:** Search Console 的「選擇資源類型」預設會讓人點左邊的「**網域**」,但那個**只能用 DNS TXT 驗證** —— 而這裡的網域是 `vercel.app`,DNS 記錄是 Vercel 的,屋主根本改不了,那串 TXT 永遠貼不進去。
+
+**正確的是右邊的「網址前綴」**,填完整網址(含 `https://`),它支援多種驗證方式。選「**HTML 標記**」,Google 會發一組**跟 DNS 那組不同**的 token。
+
+Next 有內建支援,不用手刻 `<head>`:
+
+```ts
+// app/layout.tsx
+verification: { google: "naVT_CBHLCQIwy5dzORiAVcQCJNmt8Hd2TuQSGmp_2Y" },
+```
+
+會產出 `<meta name="google-site-verification" content="..." />`。**這個 token 是設計成公開的**(就是放在 HTML 裡給 Google 看的),只有配上發出它的 Google 帳號才有意義,所以進 public repo 沒有安全問題。
+
+因為寫在 **root layout**,所以它出現在每一頁而不只首頁 —— Google 那句「請不要從首頁移除元標記」自然滿足,而且已進版控,不會不小心掉。
+
+驗證通過後:左邊選單 **索引 → Sitemap**,輸入框只要填 `sitemap.xml`(網域它自己帶),送出即成功。
+
+**線上實測(部署後對 production 網址跑的,不是本機)**:
+
+| 檢查 | 結果 |
+|---|---|
+| `VERCEL_PROJECT_PRODUCTION_URL` 是否自動帶對網域 | ✅ sitemap / robots / og:image 三處全部是 `portfolio-topaz-zeta-70.vercel.app`,程式沒寫死任何網址 |
+| sitemap 筆數 | 52(4 主頁 + 48 作品) |
+| **52 個網址逐一實連** | **全部 200,0 個死連結** |
+| OG 圖實際下載 | 200,`image/jpeg`,34,506 bytes |
+| 作品頁 og:title / og:description | 各自正確(如 `Character Model — Chai Gai Foon`) |
+| 手機版修正是否上線 | CSS 確認 `--fig-y:105 --fig-w:300 --fig-h:271 --arrow-y:226` |
+
 ### 還沒處理的
 
-**第 3 件:Vercel 網址改名**,要屋主自己到後台做 —— Settings → General → Project Name,或 Settings → Domains 直接加一個 `xxx.vercel.app`。`.vercel.app` 的名字全 Vercel 唯一,好念的常被佔走。**改完程式端不用動**,重新部署時 `VERCEL_PROJECT_PRODUCTION_URL` 會自己帶新網域進來。舊網址改名後就不通,但現在還沒有人拿著舊連結,是最便宜的時機。
+**第 3 件:Vercel 網址改名**,要屋主自己到後台做 —— Settings → General → Project Name,或 Settings → Domains 直接加一個 `xxx.vercel.app`。`.vercel.app` 的名字全 Vercel 唯一,好念的常被佔走。
+
+**程式端不用動**,重新部署時 `VERCEL_PROJECT_PRODUCTION_URL` 會自己帶新網域進來 —— 這點上面已經實測過。
+
+**但 Search Console 那邊要整套重做**,因為「網址前綴」資源綁死確切網址:
+
+1. 新增資源(用新網址)→ 選「網址前綴」→ HTML 標記
+2. 拿**新的** token 換掉 `app/layout.tsx` 裡那一行,推上去
+3. 按驗證 → 重新提交 `sitemap.xml`
+
+> **所以改名要趁早。** 現在只是重跑一次上面三步;等 Google 真的開始索引、或等有人拿著舊連結之後再改,成本才會變高。
 
 ---
 
