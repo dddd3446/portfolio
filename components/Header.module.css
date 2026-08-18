@@ -51,6 +51,12 @@
   --rule-w: 0.5625rem; /* 9 */
   --rule-h: 0.125rem; /* 2 */
   --rule-top: 1.25rem; /* 20 below the nav text box */
+
+  /* The height of the nav text box in Figma, which is what --rule-top is
+     measured against. It has to travel with the band: the mark is placed
+     from the top of that box, so a box the wrong height leaves the mark
+     where the design put it and moves the words across it instead. */
+  --nav-line: 1.625rem; /* 26 */
 }
 
 .logo {
@@ -75,7 +81,7 @@
   position: relative;
   font-size: var(--t-nav-size);
   font-weight: 400;
-  line-height: 1.625rem; /* 26 */
+  line-height: var(--nav-line);
   color: var(--nav-fg);
   letter-spacing: var(--t-nav-track);
   white-space: nowrap;
@@ -121,9 +127,10 @@
     --nav-top: 3.9375rem; /* 63 */
     --nav-gap: 4.6875rem; /* 75 */
     --nav-pad-end: 6rem; /* 96 */
-    --rule-w: 0.9375rem; /* 15 */
+    --rule-w: 0.8125rem; /* 13 */
     --rule-h: 0.1875rem; /* 3 */
     --rule-top: 1.5rem; /* 24 */
+    --nav-line: 2rem; /* 32 */
   }
 }
 
@@ -139,6 +146,7 @@
     --rule-w: 0.375rem; /* 6 */
     --rule-h: 0.0625rem; /* 1 */
     --rule-top: 0.6875rem; /* 11 */
+    --nav-line: 0.875rem; /* 14 */
   }
 }
 
