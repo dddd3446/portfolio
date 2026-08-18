@@ -91,7 +91,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
     <main className={s.page}>
       <ArtworkSwipe prev={prev?.slug} next={next?.slug} />
 
-      <div className={s.stage}>
+      <div className={s.stage} data-swipe-stage>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={s.rings} src="/assets/decor/rings-detail.svg" alt="" aria-hidden />
 
