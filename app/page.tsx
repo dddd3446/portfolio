@@ -19,7 +19,12 @@ export default function HomePage() {
              the pixels the box can show — invisible while the source was
              smaller than the box, and expensive now that it is far larger. */
           sizes="(max-width: 767.98px) 100vw, 64vw"
-          quality={90}
+          /* 75, not 90. This is the largest thing the site asks anyone to
+             download and the first thing they wait for. The photograph is a
+             smooth studio gradient, which is what webp compresses best: at
+             the width the box actually draws, 90 costs 524KB and 75 costs 76,
+             and side by side there is nothing between them. */
+          quality={75}
           priority
         />
       </div>
