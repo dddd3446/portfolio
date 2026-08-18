@@ -152,6 +152,27 @@ body {
   color: var(--c-ink);
   font-family: var(--font-biryani), sans-serif;
   -webkit-font-smoothing: antialiased;
+
+  /* Every page is drawn at the fixed height its Figma frame has, and on a
+     tall phone the shorter ones — Contact, Resume — finish well before the
+     bottom of the screen. That left the footer stranded mid-screen with bare
+     background beneath it. Making the body a column lets the footer be
+     pushed down instead.
+
+     `dvh`, not `vh`: on a phone the browser toolbar collapses as you scroll,
+     and `vh` is frozen at the taller measurement, which would hang the
+     footer just past the bottom edge and invent a scroll. */
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+}
+
+/* The slack goes above the footer rather than into the page: stretching the
+   page instead would move anything its layout anchors to the bottom, and
+   every coordinate in these frames is taken from Figma. The gap lands on the
+   page background, which is what was already showing there. */
+body > footer {
+  margin-top: auto;
 }
 
 h1,

@@ -166,24 +166,9 @@
   clip-path: polygon(0 0, 100% 50%, 0 100%);
 }
 
-.work:hover .play {
-  background: rgb(0 0 0 / 70%);
-}
-
-/* The overlay copy and the badge would sit on top of each other; on the
-   pieces that have both, the copy wins on hover. */
-.work[data-hover]:hover .play {
-  opacity: 0;
-}
-
-/* Component `show hover` (373:244). Only The Duck carries the overlay copy so
-   far; the rest render as plain tiles until the remaining titles exist. */
+/* Component `show hover` (373:244). */
 .work[data-hover] img {
   transition: transform 0.4s ease;
-}
-
-.work[data-hover]:hover img {
-  transform: scale(1.0947);
 }
 
 /* In the design the copy block sits 26px in and ends 20px off the bottom of a
@@ -206,9 +191,39 @@
   transition: opacity 0.35s ease;
 }
 
-.work[data-hover]:hover .overlay,
-.work[data-hover]:focus-within .overlay {
-  opacity: 1;
+/* Every hover affordance on a tile lives here, behind two conditions.
+
+   `hover: hover` — a touch screen has nothing to hover with. Left ungated,
+   the first tap paints the caption and a second is needed to follow the
+   link, so the copy ends up standing between the visitor and the piece.
+
+   `min-width: 768px` — below that the design draws the tiles from 48px to
+   216px wide, median 103px. Those hold roughly 12 to 84 characters against
+   descriptions that average 150, so the caption could only ever show a
+   fragment cut mid-sentence. There is nothing to gain by offering it.
+
+   The overlay stays in the DOM at opacity 0 rather than being removed, so
+   the title and description are still there for a screen reader on a
+   phone; it is only the visual reveal that is withheld. */
+@media (hover: hover) and (min-width: 768px) {
+  .work[data-hover]:hover .overlay,
+  .work[data-hover]:focus-within .overlay {
+    opacity: 1;
+  }
+
+  .work[data-hover]:hover img {
+    transform: scale(1.0947);
+  }
+
+  .work:hover .play {
+    background: rgb(0 0 0 / 70%);
+  }
+
+  /* The caption and the badge would sit on top of each other; on the
+     pieces that have both, the copy wins on hover. */
+  .work[data-hover]:hover .play {
+    opacity: 0;
+  }
 }
 
 /* Sized off the tile (cqw) but bounded top and bottom. Unbounded, the 49 tiles

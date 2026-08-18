@@ -230,6 +230,26 @@
     background: var(--c-bg);
   }
 
+  /* Home on the phone is the one header lying across two grounds at once:
+     the hero photograph runs dark beneath the logo on the left, while the
+     white cut-out reaches under the menu button on the right. So the two
+     marks want opposite colours — logo to white, burger to ink — where
+     every other page is content with one treatment. The logo art is solid
+     black on transparency, so it is inverted here rather than shipped a
+     second time as a white file.
+
+     Closed state only: opening the panel lays the bar's own light
+     background over both marks, which the rule above already dresses. */
+  .floating:not([data-open="true"]) .logo img {
+    filter: brightness(0) invert(1);
+  }
+
+  .floating:not([data-open="true"]) .burger,
+  .floating:not([data-open="true"]) .burger::before,
+  .floating:not([data-open="true"]) .burger::after {
+    background: var(--c-ink);
+  }
+
   .nav {
     position: fixed;
     inset: var(--header-h) 0 auto 0;
