@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Biryani } from "next/font/google";
 
 import SiteChrome from "@/components/SiteChrome";
-import { SITE } from "@/lib/site";
+import { SITE, SITE_URL } from "@/lib/site";
 import "./globals.css";
 
 // The design uses Light / Regular / SemiBold / Bold / Black of the same family.
@@ -14,12 +14,27 @@ const biryani = Biryani({
 });
 
 export const metadata: Metadata = {
+  /* Turns the relative URLs below — and `opengraph-image.jpg` next to this
+     file — into the absolute ones Open Graph requires. */
+  metadataBase: SITE_URL,
   title: {
     default: `${SITE.owner} — Multimedia Design Portfolio`,
     template: `%s — ${SITE.owner}`,
   },
   description:
     "Portfolio of Chai Gai Foon, a multimedia design student working across photography, illustration, 3D and poster design.",
+  /* Without these a link to this site pastes into a chat or a feed as bare
+     text. Neither block repeats the title or the description: Next fills
+     `openGraph` from the page's own metadata when they are left out, and
+     `twitter` from `openGraph` in turn — so each of the 52 pages keeps the
+     heading and write-up it already declares, and the four fields here are
+     only the ones that have no page-level equivalent. */
+  openGraph: {
+    type: "website",
+    siteName: SITE.owner,
+    locale: "en_US",
+  },
+  twitter: { card: "summary_large_image" },
 };
 
 export default function RootLayout({

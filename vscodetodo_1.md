@@ -11,7 +11,7 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 
 待辦 3 ~ 7 是最早整理的那批(全部已完成),待辦 8 ~ 13 是 2026-08-18 補上的,大多是**要屋主提供內容或拍板**、不是程式端的工作。待辦 14 ~ 18 是同日實測後補的;待辦 19 ~ 20 是 2026-08-19 上線後補的。
 
-**待辦 3 ~ 19 全部結案。**唯一還開著的是**待辦 20**(OG 分享預覽卡 / sitemap / Vercel 網址),那三件不是功能,是上線後的收尾。
+**待辦 3 ~ 19 全部結案。待辦 20 只剩一件**:把 Vercel 那個亂數網址改成好唸的名字 —— 那是屋主到後台點幾下的事,程式端已經做完而且不受它影響。
 
 **已推上 GitHub**:`https://github.com/dddd3446/portfolio`(public),接 Vercel 自動部署,線上已確認正常。
 
@@ -881,7 +881,9 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 
 ## 待辦 20:上線後的分享與搜尋 —— OG 預覽卡、sitemap / robots、Vercel 網址
 
-**狀態:⬜ 待處理(2026-08-19 盤點)。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。動手前卡在兩件要屋主決定的事,見本節末尾「動手前必須先確定的」。**
+**狀態:第 1、2 件 ✅ 已完成(2026-08-19);第 3 件 ⬜ 待屋主自己在 Vercel 後台改。三件都不是功能,是「別人怎麼看到、怎麼找到這個作品集」。**
+
+> **原本卡住的「要先知道 production 網址」後來繞掉了。** 見本節末尾「動手前必須先確定的」第 (c) 點 —— 網址完全沒有寫死,改從環境變數讀,所以第 3 件什麼時候做、做不做,都不影響第 1、2 件。實作與實測見「最後怎麼做的」。
 
 ### 1. 分享預覽(Open Graph)完全沒有 ⬜
 
@@ -924,6 +926,26 @@ Artwork 頁 49 張圖、9435px 高。線上實測第一次造訪往下捲會看�
 - `hero.jpg` 是 4020×6024 的**直式**人像,OG 卡是 1200×630 的橫式(約 1.9:1),硬裁只會取到中間一條,臉會被切掉
 - `logo.png` 只有 30KB、尺寸也小
 - 兩個選項:**(甲)** 屋主從 Figma 匯出一張 1200×630 的分享卡(名字 + slogan + 一件代表作)—— 這是設計的事,屋主做比程式湊好;**(乙)** 用 `next/og` 程式生成一張純文字的(名字 + slogan + 深色底),不用屋主動手,但上面沒有作品
+
+---
+
+### 最後怎麼做的(2026-08-19)
+
+**網址:一行都沒有寫死。** `lib/site.ts` 新增 `SITE_URL`,依序讀 `NEXT_PUBLIC_SITE_URL` → `VERCEL_PROJECT_PRODUCTION_URL`(Vercel build 時自動給,只有主機名沒有協定)→ 退回 `http://localhost:3000`。**實測**:把 `VERCEL_PROJECT_PRODUCTION_URL=chaigaifoon.vercel.app` 灌進去 build,sitemap、robots、og:image 三處全部變成該網域,程式沒有動任何一個字。所以之後改名、甚至買自訂網域,這裡都不用改。
+
+**OG 圖:屋主選了 A。** 從 hero 原圖(`IMG_2815.jpg`,4020×6024,與 `public/assets/images/home/hero.jpg` 位元組相同)裁 y1750 起、全寬 4020×2111,縮成 1200×630,mozjpeg q82 = **34KB**。切之前先用 sharp 量出亮圓的實際範圍(x 340..3670、y 2040..5350)再定裁切線,不是目測。34KB 遠低於 WhatsApp 約 300KB 的門檻。放成 `app/opengraph-image.jpg` + `app/opengraph-image.alt.txt`(Next 檔案慣例,自動產生 og:image / twitter:image 與寬高)。
+
+**文字完全沒有重寫。** `app/layout.tsx` 的 `openGraph` 只寫了 `type` / `siteName` / `locale`,`twitter` 只寫了 `card: "summary_large_image"`。Next 的 `inheritFromMetadata` 會把每頁自己的 `title` / `description` 補進 `openGraph`,再由 `openGraph` 補進 `twitter`(原始碼在 `next/dist/lib/metadata/resolve-metadata.js`)。**實測**:`/artwork/character-model` 的 og:title 是「Character Model — Chai Gai Foon」、og:description 是該件作品的敘述,52 頁各自正確。
+
+**sitemap 沒有另寫一份篩選邏輯。** `published()` 已從 `app/artwork/[slug]/page.tsx` 抽到 **`lib/published.ts`**,route 與 sitemap 共用同一個函式。**實測**:sitemap 產出 52 筆(4 個主頁 + 48 件作品),逐一 curl 過,**52 筆全部 200,沒有一個 404**。
+
+**沒有加 `lastModified` / `priority` / `changeFrequency`。** `lastModified` 只能填 build 時間,那等於每次部署都宣稱 52 頁全部改過 —— 是假的;後兩者 Google 根本不看,填了只是裝飾。
+
+**驗過**:`tsc` / `eslint` 乾淨,`next build` 從 55 頁變 58 頁(多了 `/opengraph-image.jpg`、`/robots.txt`、`/sitemap.xml`)。
+
+### 還沒處理的
+
+**第 3 件:Vercel 網址改名**,要屋主自己到後台做 —— Settings → General → Project Name,或 Settings → Domains 直接加一個 `xxx.vercel.app`。`.vercel.app` 的名字全 Vercel 唯一,好念的常被佔走。**改完程式端不用動**,重新部署時 `VERCEL_PROJECT_PRODUCTION_URL` 會自己帶新網域進來。舊網址改名後就不通,但現在還沒有人拿著舊連結,是最便宜的時機。
 
 ---
 

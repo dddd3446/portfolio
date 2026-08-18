@@ -1,3 +1,22 @@
+/**
+ * The site's own origin. Open Graph tags and the sitemap both have to carry
+ * absolute URLs, and getting this wrong is invisible locally and broken in
+ * public: a wrong origin means share cards fetch an image that isn't there,
+ * and a sitemap that hands search engines a list of dead links.
+ *
+ * So it is not written down here. Vercel passes the production domain to the
+ * build as `VERCEL_PROJECT_PRODUCTION_URL` (host only, no scheme), which means
+ * renaming the project — or pointing a bought domain at it later — needs no
+ * change to this file. `NEXT_PUBLIC_SITE_URL` overrides it for a domain Vercel
+ * would not know about; `next dev` falls through to localhost.
+ */
+export const SITE_URL = new URL(
+  process.env.NEXT_PUBLIC_SITE_URL ??
+    (process.env.VERCEL_PROJECT_PRODUCTION_URL
+      ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+      : "http://localhost:3000"),
+);
+
 export const SITE = {
   owner: "Chai Gai Foon",
   copyrightYear: 2026,
