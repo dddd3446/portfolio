@@ -6,11 +6,35 @@
    and 1920 both leave out. The footer follows 1440/1920 — the page already
    carries a row of large social buttons in its body, so repeating them is
    what the omission is there to avoid. */
+/* The frame height is the drawn height, but on a tall phone the page and the
+   footer together do not reach the bottom of the screen. Let the page take
+   that slack rather than leaving it between the page and the footer, so the
+   composition still ends where the footer begins. */
 .page {
   position: relative;
   overflow: hidden;
   background: var(--c-bg);
-  height: var(--page-h);
+  min-height: var(--page-h);
+  flex: 1 0 auto;
+}
+
+/* At 768 and wider the wave is drawn taller than the frame and the overflow
+   above already crops it, so growing the page just reveals more of a shape
+   that was there all along. At 390 it is the one breakpoint where the wave
+   ends exactly on the frame edge (117 + 369.5 = 486.5 against a 487 frame),
+   so the extra height would expose the page ground under the wave's flat
+   bottom — a hard grey-on-white line across the screen just above the
+   footer. This continues the wave's own fill from that edge down.
+
+   Its top sits below the frame at every other breakpoint, which makes the
+   height negative and the block collapses to nothing, so it costs those
+   nothing. Painted last, but only ever over the band beneath the wave,
+   which the design leaves empty. */
+.page::after {
+  content: "";
+  position: absolute;
+  inset: calc(var(--wave-y) + var(--wave-h)) 0 0 0;
+  background: var(--c-wave);
 }
 
 /* Spans the full frame width in the design, and the export is
