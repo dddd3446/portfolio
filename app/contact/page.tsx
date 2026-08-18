@@ -8,6 +8,10 @@ export const metadata: Metadata = { title: "Contact" };
 export default function ContactPage() {
   return (
     <main className={s.page}>
+      {/* As on Artwork: the design opens on the email address rather than on
+          a title, so the page's name is written rather than drawn. */}
+      <h1 className="srOnly">Contact</h1>
+
       {/* 390 is drawn as its own shape in Figma rather than the wide one
           scaled down, so both ship and the CSS picks one — the same way Home
           carries its two curves. */}

@@ -99,6 +99,12 @@ export default function ArtworkPage() {
 
   return (
     <main className={s.page}>
+      {/* The design names this page through its four category headings rather
+          than a title of its own, so the page's own name is written for the
+          people who arrive at a heading list — a screen reader's first jump,
+          and what a search engine reads as the subject. */}
+      <h1 className="srOnly">Artwork</h1>
+
       {/* Both curves span their frame edge to edge, so only their vertical
           placement comes from the data — the CSS stretches them to whatever
           the viewport is, the same way the other pages handle their waves. */}
@@ -176,7 +182,14 @@ export default function ArtworkPage() {
                     width={widest(work)}
                     height={Math.round(widest(work) * (work.box.w1440.h / work.box.w1440.w))}
                     sizes={`${widest(work)}px`}
-                    quality={90}
+                    /* 75 here alone. This page carries 49 of these down 9000px
+                       and the largest is drawn 547 wide, where the step up to
+                       90 is invisible and roughly doubles the bytes — which is
+                       the wait a first visit spends scrolling past empty tiles.
+                       The three pages that show one image at full size keep
+                       90: there the difference is the point, and one image is
+                       not what makes a page slow. */
+                    quality={75}
                     /* The canvas runs to 9000px and lazy-loads; only the
                        pieces visible on arrival are worth fetching up front. */
                     priority={work.box.w1440.y < 800}
