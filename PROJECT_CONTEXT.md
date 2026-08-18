@@ -34,6 +34,7 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 - **repo 根目錄 = `portfolio/`**,不是外面那層 `portfolio website/`。這樣之後接 Vercel 不用設定子目錄。
 - 第一個 commit `048b20a`,124 個檔案,`.git` 約 30MB。
 - `.gitignore` 是 Next 的標準版本,沒有改過。`node_modules`(434MB)和 `.next`(321MB)都擋掉了,所以 800MB 的資料夾只有 30MB 進版控。`public/assets/`(32MB 作品圖)**有**進去。
+- **`id` 與 `slug` 是兩回事**(2026-08-18 起):`id`(`vp-01`、`sd-05`…)是內部識別,`lib/artwork-content.ts` 用它當 key,這兩份文件裡的引用也都是它,**不會變**;`slug`(`yellow-ixora`…)只負責公開網址。改標題不會自動改網址,要自己去改 `slug`,上線後再改還得補 redirect。
 - **還沒有 GitHub remote**,是屋主刻意的——等網站真的完成再推,推之前要先決定 public 還是 private。
 - Windows 上 `git add` 會跳一堆 `LF will be replaced by CRLF`,那是正常的行末轉換(repo 存 LF、工作區用 CRLF),不是錯誤。專案沒有加 `.gitattributes`。
 
@@ -158,21 +159,21 @@ portfolio/
 | Home / Resume / Contact / Artwork 四頁 | ✅ 四個斷點都完成,頁面高度跟 Figma frame 逐一對過 |
 | 共用 Header / Footer | ✅ 四個斷點 |
 | Artwork 分類子導覽 + scroll-spy(待辦 5) | ✅ |
-| 作品詳情疊層 + 路由 + prev/next + 關閉(待辦 6) | ✅ 程式完成,⬜ 等文案 |
+| 作品詳情疊層 + 路由 + prev/next + 關閉(待辦 6) | ✅ 程式完成;48 件詳情頁全部已發佈 |
 | 響應式(待辦 3) | ✅ |
-| 48 件作品的文案(待辦 8) | ⬜ **1 / 48**,擋住最多東西的一項 |
-| 影片素材(待辦 4 第 1 點) | ✅ 10 支都接上 YouTube 嵌入,詳情頁播放 |
+| 48 件作品的文案(待辦 8) | ✅ **已結案**。標題+敘述 48 / 48;`meta` 16 / 48(屋主決定不用全填) |
+| 影片素材(待辦 4 第 1 點) | ✅ 10 支都接上 YouTube 嵌入,已實測播放器載入 + oEmbed 全數 200 |
 | CV 檔案、社群連結網址(待辦 9) | ✅ 兩個都填進 `lib/site.ts` 了 |
 | Header 指示條彈性動畫(待辦 7) | ✅ 左右兩邊各一顆彈簧,拉長與回彈都是算出來的 |
 | 詳情頁 frame 高度貼合螢幕(待辦 10) | ✅ 四個斷點 740 / 950 / 790 / 940 |
 | 跨斷點設計不一致(待辦 11) | ✅ 屋主決定維持現狀,四項都不改 |
 | 素材整理(待辦 13) | ✅ 海報壓到 3.46MB;Figma 散落節點與 `_unused/` 決定留著 |
-| 網址改成有意義的 slug(待辦 12) | ⬜ 等待辦 8 寫完再一次換,**公開前要定案** |
-| 版控 | ✅ git repo 已建(`main`,commit `048b20a`);⬜ GitHub 等完成再推 |
+| 網址改成有意義的 slug(待辦 12) | ✅ 48 個網址全換成可讀 slug;`id` 與 `slug` 分家 |
+| 版控 | ✅ git repo 已建(`main`);⬜ **GitHub 還沒推**,屋主已決定要 public |
 
-**程式端的待辦已經清空。** 剩下的 ⬜ 是在等屋主寫作品文案(待辦 8),以及公開前要定案的網址 slug(待辦 12,等 8 做完)。
+**程式端的待辦已經清空,待辦 3 ~ 15 全部結案。** 剩下唯一一件事是推上 GitHub(public,屋主已決定)。
 
-`npm run build` 目前是過的,**20 個頁面**全部靜態產生(其中 11 個是作品詳情頁——The Duck 加 10 支影片),`tsc` 與 `eslint` 乾淨。
+`npm run build` 目前是過的,**57 個頁面**全部靜態產生(其中 48 個是作品詳情頁),`tsc` 與 `eslint` 乾淨。
 
 ---
 

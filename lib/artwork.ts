@@ -268,7 +268,7 @@ export const WORKS: Work[] = [
   // ---- Visual Product ----
   {
     id: "vp-01",
-    slug: "vp-01",
+    slug: "yellow-ixora",
     category: "visual-product",
     src: `${dir}/20_image_77.png`,
     alt: "Close-up of yellow ixora blossoms",
@@ -281,7 +281,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-02",
-    slug: "vp-02",
+    slug: "bougainvillea",
     category: "visual-product",
     src: `${dir}/16_image_80.png`,
     alt: "Purple bougainvillea against a dark background",
@@ -300,7 +300,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-03",
-    slug: "vp-03",
+    slug: "one-red-flower",
     category: "visual-product",
     src: `${dir}/17_image_81.png`,
     alt: "A single red flower among green leaves",
@@ -318,7 +318,7 @@ export const WORKS: Work[] = [
     },
   },
   {
-    id: "vp-the-duck",
+    id: "the-duck",
     slug: "the-duck",
     category: "visual-product",
     src: `${dir}/49_the_duck_show_hover.png`,
@@ -338,7 +338,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-04",
-    slug: "vp-04",
+    slug: "red-cluster",
     category: "visual-product",
     src: `${dir}/19_image_79.png`,
     alt: "Coral begonia flowers in shallow focus",
@@ -355,7 +355,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-05",
-    slug: "vp-05",
+    slug: "malayan-tapir",
     category: "visual-product",
     src: `${dir}/18_image_89.png`,
     alt: "A tapir standing on bare ground",
@@ -374,7 +374,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-06",
-    slug: "vp-06",
+    slug: "peahen-on-a-post",
     category: "visual-product",
     src: `${dir}/10_image_87.png`,
     alt: "Architectural photograph",
@@ -393,7 +393,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-07",
-    slug: "vp-07",
+    slug: "cobra-in-the-sun",
     category: "visual-product",
     src: `${dir}/11_image_88.png`,
     alt: "Architectural photograph",
@@ -406,7 +406,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-08",
-    slug: "vp-08",
+    slug: "freshwater-shelf",
     category: "visual-product",
     src: `${dir}/47_image_96.png`,
     alt: "3D render of a stylised iceberg resting on stacked blue discs",
@@ -425,7 +425,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-09",
-    slug: "vp-09",
+    slug: "light-painting-i",
     category: "visual-product",
     src: `${dir}/24_image_92.png`,
     alt: "Portrait photograph",
@@ -444,7 +444,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-10",
-    slug: "vp-10",
+    slug: "light-painting-ii",
     category: "visual-product",
     src: `${dir}/22_image_90.png`,
     alt: "Photographic study",
@@ -485,7 +485,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-12",
-    slug: "vp-12",
+    slug: "light-painting-iii",
     category: "visual-product",
     src: `${dir}/23_image_91.png`,
     alt: "Photographic study",
@@ -504,7 +504,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-13",
-    slug: "vp-13",
+    slug: "a-planet-built-over",
     category: "visual-product",
     src: `${dir}/25_image_95.png`,
     alt: "Portrait photograph",
@@ -523,7 +523,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-14",
-    slug: "vp-14",
+    slug: "glass-corner",
     category: "visual-product",
     src: `${dir}/14_image_82.png`,
     alt: "Photographic study",
@@ -539,7 +539,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-15",
-    slug: "vp-15",
+    slug: "curtain-wall",
     category: "visual-product",
     src: `${dir}/15_image_83.png`,
     alt: "Photographic study",
@@ -558,7 +558,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-16",
-    slug: "vp-16",
+    slug: "concrete-and-sky",
     category: "visual-product",
     src: `${dir}/13_image_86.png`,
     alt: "Photographic study",
@@ -577,7 +577,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-17",
-    slug: "vp-17",
+    slug: "one-cloud",
     category: "visual-product",
     src: `${dir}/21_image_84.png`,
     alt: "Photographic study",
@@ -590,7 +590,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-18",
-    slug: "vp-18",
+    slug: "shadow-of-the-fence",
     category: "visual-product",
     src: `${dir}/12_image_85.png`,
     alt: "Photographic study",
@@ -609,7 +609,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-19",
-    slug: "vp-19",
+    slug: "guzheng",
     category: "visual-product",
     src: `${dir}/28_screenshot_20250901_153156.png`,
     alt: "3D render",
@@ -625,7 +625,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-20",
-    slug: "vp-20",
+    slug: "character-model",
     category: "visual-product",
     src: `${dir}/27_image_98.png`,
     alt: "3D render",
@@ -644,7 +644,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-21",
-    slug: "vp-21",
+    slug: "the-golden-pillar",
     category: "visual-product",
     src: `${dir}/26_image_105.png`,
     alt: "3D render",
@@ -661,7 +661,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-22",
-    slug: "vp-22",
+    slug: "banjo",
     category: "visual-product",
     src: `${dir}/29_screenshot_20250901_153902.png`,
     alt: "3D render",
@@ -677,7 +677,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "vp-23",
-    slug: "vp-23",
+    slug: "gas-stove",
     category: "visual-product",
     src: `${dir}/30_947e4276_fdb2.png`,
     alt: "3D render",
@@ -695,7 +695,7 @@ export const WORKS: Work[] = [
   // ---- 2D & 3D Animation ----
   {
     id: "an-01",
-    slug: "an-01",
+    slug: "logo-with-a-face",
     category: "animation",
     src: `${dir}/05_FAD_logo_animation1.png`,
     youtubeId: "PD2BqAp6gFY",
@@ -709,7 +709,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-02",
-    slug: "an-02",
+    slug: "old-youtube-intro",
     category: "animation",
     src: `${dir}/03_FAD_logo_animation2.png`,
     youtubeId: "v_ij-gYtqHo",
@@ -723,7 +723,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-03",
-    slug: "an-03",
+    slug: "logo-in-tetris-blocks",
     category: "animation",
     src: `${dir}/06_FAD_logo_animation3.png`,
     youtubeId: "FfveeIXrr1M",
@@ -737,7 +737,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-04",
-    slug: "an-04",
+    slug: "savage",
     category: "animation",
     src: `${dir}/02_MV_yeren.png`,
     youtubeId: "Of31HehQg1I",
@@ -751,7 +751,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-05",
-    slug: "an-05",
+    slug: "the-angry-dinosaur",
     category: "animation",
     src: `${dir}/04_stop_motion.png`,
     youtubeId: "gwD1F2Vcamk",
@@ -765,7 +765,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-06",
-    slug: "an-06",
+    slug: "katana",
     category: "animation",
     src: `${dir}/01_katana_show_video.png`,
     youtubeId: "bEGi2ncD3Jg",
@@ -779,7 +779,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-07",
-    slug: "an-07",
+    slug: "doraemon-running",
     category: "animation",
     src: `${dir}/07_2d_front_walking_cycle.png`,
     youtubeId: "yNuLK-KMNM8",
@@ -793,7 +793,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-08",
-    slug: "an-08",
+    slug: "antarctic-adventure",
     category: "animation",
     src: `${dir}/08_2d_talking_animation.png`,
     youtubeId: "CySX0Ps2Pac",
@@ -807,7 +807,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-09",
-    slug: "an-09",
+    slug: "the-cheat-sheet",
     category: "animation",
     src: `${dir}/09_2d_exam_show_animation.png`,
     youtubeId: "1ppnhdq5-aQ",
@@ -821,7 +821,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "an-10",
-    slug: "an-10",
+    slug: "caught-sleeping",
     category: "animation",
     src: `${dir}/31_3d_animation_story.png`,
     youtubeId: "ciWffF7ccwY",
@@ -837,7 +837,7 @@ export const WORKS: Work[] = [
   // ---- Studio Drawing ----
   {
     id: "sd-01",
-    slug: "sd-01",
+    slug: "chalet-below-the-peaks",
     category: "studio-drawing",
     src: `${dir}/32_screenshot_20260805_014758.png`,
     alt: "Charcoal landscape of a chalet below mountains",
@@ -856,7 +856,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-02",
-    slug: "sd-02",
+    slug: "the-windmill",
     category: "studio-drawing",
     src: `${dir}/33_screenshot_20260805_014803.png`,
     alt: "Studio drawing",
@@ -875,7 +875,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-03",
-    slug: "sd-03",
+    slug: "afternoon-tea",
     category: "studio-drawing",
     src: `${dir}/38_screenshot_20260805_014808.png`,
     alt: "Studio drawing",
@@ -894,7 +894,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-04",
-    slug: "sd-04",
+    slug: "still-life-sketch-1",
     category: "studio-drawing",
     src: `${dir}/34_screenshot_20260805_014051.png`,
     alt: "Studio drawing",
@@ -913,7 +913,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-05",
-    slug: "sd-05",
+    slug: "portrait-of-tesla",
     category: "studio-drawing",
     src: `${dir}/39_image_119.png`,
     alt: "Studio drawing",
@@ -932,7 +932,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-06",
-    slug: "sd-06",
+    slug: "still-life-sketch-2",
     category: "studio-drawing",
     src: `${dir}/35_screenshot_20260805_014047.png`,
     alt: "Studio drawing",
@@ -951,7 +951,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-07",
-    slug: "sd-07",
+    slug: "portrait-of-tesla-2",
     category: "studio-drawing",
     src: `${dir}/36_image_116.png`,
     alt: "Pointillist portrait in oil pastel with green hair",
@@ -970,7 +970,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-08",
-    slug: "sd-08",
+    slug: "still-life-sketch-3",
     category: "studio-drawing",
     src: `${dir}/41_screenshot_20260805_014753.png`,
     alt: "Studio drawing",
@@ -989,7 +989,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-09",
-    slug: "sd-09",
+    slug: "still-life-sketch-4",
     category: "studio-drawing",
     src: `${dir}/40_screenshot_20260805_014749.png`,
     alt: "Studio drawing",
@@ -1005,7 +1005,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "sd-10",
-    slug: "sd-10",
+    slug: "portrait-of-tesla-3",
     category: "studio-drawing",
     src: `${dir}/37_image_117.png`,
     alt: "Pointillist portrait in oil pastel with pink hair",
@@ -1026,7 +1026,7 @@ export const WORKS: Work[] = [
   // ---- Poster Design ----
   {
     id: "pd-01",
-    slug: "pd-01",
+    slug: "oppenheimer-poster",
     category: "poster-design",
     src: `${dir}/43_D240074B_A3.jpeg`,
     alt: "Oppenheimer film poster, A3 portrait",
@@ -1039,7 +1039,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "pd-02",
-    slug: "pd-02",
+    slug: "oppenheimer-wide",
     category: "poster-design",
     src: `${dir}/44_D240074B_landscape.jpeg`,
     alt: "Oppenheimer film poster, landscape",
@@ -1052,7 +1052,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "pd-03",
-    slug: "pd-03",
+    slug: "chefs-knife",
     category: "poster-design",
     src: `${dir}/42_poster_121.jpeg`,
     alt: "Japanese knife poster with a sushi platter",
@@ -1065,7 +1065,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "pd-04",
-    slug: "pd-04",
+    slug: "november",
     category: "poster-design",
     src: `${dir}/45_train_2-01.jpeg`,
     alt: "November calendar poster with a red train illustration",
@@ -1078,7 +1078,7 @@ export const WORKS: Work[] = [
   },
   {
     id: "pd-05",
-    slug: "pd-05",
+    slug: "water-bankruptcy",
     category: "poster-design",
     src: `${dir}/46_poster_fyp_2.png`,
     alt: "Water Bankruptcy — final-year project poster",

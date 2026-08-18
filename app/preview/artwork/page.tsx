@@ -15,7 +15,7 @@ export const metadata: Metadata = { title: "Artwork keys" };
 export default function ArtworkKeysPage() {
   // Counted in pieces, not tiles: a second crop is not another thing to write.
   const pieces = WORKS.filter((work) => !work.sameAs);
-  const done = pieces.filter((work) => contentFor(work.slug)).length;
+  const done = pieces.filter((work) => contentFor(work.id)).length;
 
   return (
     <main className={s.page}>
@@ -37,14 +37,15 @@ export default function ArtworkKeysPage() {
 
           <ul className={s.grid}>
             {WORKS.filter((work) => work.category === category.id).map((work) => {
-              const slug = work.sameAs ?? work.slug;
-              const content = contentFor(slug);
+              // The copy is filed under `id`; `slug` is only the public URL.
+              const key = work.sameAs ?? work.id;
+              const content = contentFor(key);
               return (
                 <li key={work.id} className={s.card} data-done={content ? true : undefined}>
                   <div className={s.thumb}>
                     <Image src={work.src} alt={work.alt} fill sizes="220px" />
                   </div>
-                  <code className={s.key}>&quot;{slug}&quot;</code>
+                  <code className={s.key}>&quot;{key}&quot;</code>
                   {work.sameAs && (
                     <p className={s.alias}>
                       second crop of {work.sameAs} — write it there
@@ -52,7 +53,7 @@ export default function ArtworkKeysPage() {
                   )}
                   <p className={s.file}>{work.src.split("/").pop()}</p>
                   <p className={s.status}>
-                    {content ? content.title : CONTENT[slug] ? "empty" : "missing entry"}
+                    {content ? content.title : CONTENT[key] ? "empty" : "missing entry"}
                   </p>
                 </li>
               );

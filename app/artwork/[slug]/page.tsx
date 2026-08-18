@@ -28,13 +28,34 @@ import s from "./page.module.css";
    The animations qualify on the video alone — the work is the film, and
    gating it on a paragraph nobody has written yet would leave ten pieces
    unplayable for no gain. */
-const published = () =>
-  WORKS.filter((work) => !work.sameAs && (contentFor(work.slug) || work.youtubeId));
+const published = () => {
+  const list = WORKS.filter((work) => !work.sameAs && (contentFor(work.id) || work.youtubeId));
+
+  /* WORKS is in layout order, which is reading order on the listing, and that
+     is what the arrows should follow. The exception is a series: the design
+     interleaves the four still-life sketches with the three Tesla portraits
+     down the Studio Drawing canvas, so stepping through alternated between
+     the two sets and neither read as a set. Emit each series as one block at
+     the position of its first member; everything else keeps its place. */
+  const out: typeof list = [];
+  const placed = new Set<string>();
+  for (const work of list) {
+    const series = contentFor(work.id)?.series;
+    if (!series) {
+      out.push(work);
+      continue;
+    }
+    if (placed.has(series)) continue;
+    placed.add(series);
+    out.push(...list.filter((item) => contentFor(item.id)?.series === series));
+  }
+  return out;
+};
 
 /* Falls back to the alt text, which is a plain description of the piece, so a
    video that has no write-up yet still gets a heading rather than an empty
    one. Real titles replace these as todo 8 gets filled in. */
-const titleFor = (work: (typeof WORKS)[number]) => contentFor(work.slug)?.title ?? work.alt;
+const titleFor = (work: (typeof WORKS)[number]) => contentFor(work.id)?.title ?? work.alt;
 
 export function generateStaticParams() {
   return published().map((work) => ({ slug: work.slug }));
@@ -46,7 +67,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   const work = published().find((item) => item.slug === slug);
   if (!work) return {};
-  const content = contentFor(slug);
+  const content = contentFor(work.id);
   return { title: titleFor(work), description: content?.description };
 }
 
@@ -57,7 +78,7 @@ export default async function ArtworkDetailPage({ params }: Props) {
   const index = list.findIndex((work) => work.slug === slug);
   const work = list[index];
   if (!work) notFound();
-  const content = contentFor(work.slug);
+  const content = contentFor(work.id);
 
   // Wraps around the published order. With a single piece there is nowhere to
   // go, so the arrows are left out rather than rendered inert.

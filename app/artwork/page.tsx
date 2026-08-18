@@ -158,9 +158,12 @@ export default function ArtworkPage() {
               // One source for the copy: a piece with a title written for it
               // gets the hover overlay and a detail view, both at once. A tile
               // that is a second crop of another piece borrows its copy and
-              // its URL rather than carrying a duplicate set.
-              const slug = work.sameAs ?? work.slug;
-              const content = contentFor(slug);
+              // its URL rather than carrying a duplicate set, so resolve to
+              // the piece that owns them. `id` is the stable key the copy is
+              // filed under; `slug` is only the public URL.
+              const owner = work.sameAs ? (WORKS.find((item) => item.id === work.sameAs) ?? work) : work;
+              const content = contentFor(owner.id);
+              const slug = owner.slug;
               // A video opens its detail view whether or not the copy is
               // written — the film is the piece. Stills still wait for a title.
               const opens = content || work.youtubeId;

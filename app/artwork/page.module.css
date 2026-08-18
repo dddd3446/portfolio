@@ -119,10 +119,14 @@
 /* A container so the hover overlay can size itself off the tile it is in —
    the tiles run from 99px wide to 886px, and the overlay was specced against
    one 344x364 instance. */
+/* `size` rather than `inline-size` so the overlay can also react to how tall
+   the tile is — a 372x210 tile and a 372x600 one need different leading. Safe
+   because every tile carries an explicit width and height from the Figma rect,
+   so the size containment this brings has nothing to compute. */
 .work {
   margin: 0;
   overflow: hidden;
-  container-type: inline-size;
+  container-type: size;
 }
 
 .open {
@@ -207,18 +211,51 @@
   opacity: 1;
 }
 
+/* Sized off the tile (cqw) but bounded top and bottom. Unbounded, the 49 tiles
+   run 187px to 725px wide at 1440, which put the body between 6.5px and 25px —
+   the small end unreadable, the large end shouting, and no two captions the
+   same size. The clamp pulls that 3.9x spread down to 1.4x: the smallest tiles
+   nearly double, the largest come back down, and most tiles land on one of the
+   two bounds so the captions read as one size across the page.
+
+   Bounds in rem, not px, so they ride the per-breakpoint root font like
+   everything else on the site. Tracking is in em so it follows the clamped
+   size instead of drifting off the raw tile width. */
+/* The floor is 16 rather than 20 because of the narrowest tile: its text box
+   is 159px, and the longest unbreakable word in any title ("Oppenheimer,")
+   measures 183px at 20 and 147px at 16. At 20 that title was clipped by the
+   tile's own overflow, which reads as a broken heading. `break-word` is the
+   guard for any longer title added later. */
 .overlayTitle {
-  font-size: 6.395cqw; /* 22 of 344 */
+  font-size: clamp(1rem, 6.395cqw, 1.6875rem); /* 16 / 22 of 344 / 27 */
   font-weight: 800;
   line-height: normal;
-  letter-spacing: 0.872cqw; /* 3 of 344 */
+  letter-spacing: 0.136em; /* 3 of 22 */
+  overflow-wrap: break-word;
 }
 
 .overlayBody {
-  font-size: 3.488cqw; /* 12 of 344 */
+  font-size: clamp(0.6875rem, 3.488cqw, 0.9375rem); /* 11 / 12 of 344 / 15 */
   font-weight: 400;
-  line-height: 2;
-  letter-spacing: 0.279cqw; /* 0.96 of 344 */
+  line-height: 1.8;
+  letter-spacing: 0.08em; /* 0.96 of 12 */
+  /* Four of the smallest tiles cannot hold a full description at a readable
+     size. Let the body shrink and clip its own tail rather than grow the
+     column: the block is bottom-anchored, so without this the overflow pushes
+     the title up out of the tile and the caption loses its heading. The full
+     text is on the detail page. */
+  min-height: 0;
+  overflow: hidden;
+}
+
+/* Short tiles have the least room to give: 1.8 leading costs them a line or
+   two of description. Tightening to 1.5 there brings the three that still
+   overran down to a few pixels — under half a line, so nothing reads as cut.
+   Left at 1.8 everywhere else, where the airier setting is the design. */
+@container (max-height: 240px) {
+  .overlayBody {
+    line-height: 1.5;
+  }
 }
 
 /* ---------------------------------------------------------------------- */
