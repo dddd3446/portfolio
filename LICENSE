@@ -1,0 +1,68 @@
+Copyright (c) 2026 Chai Gai Foon. All rights reserved.
+
+This repository contains two different kinds of work, and they are NOT
+under the same terms. Read both sections before reusing anything.
+
+
+===============================================================================
+1. THE ARTWORK AND OTHER CREATIVE CONTENT — All rights reserved
+===============================================================================
+
+Every photograph, drawing, painting, 3D render, poster, animation, video
+still, logo and piece of written copy in this repository is the personal
+creative work of Chai Gai Foon. It is NOT covered by the MIT licence in
+section 2, and no rights to it are granted by this file.
+
+This includes, but is not limited to, everything under:
+
+    public/assets/images/     photographs, drawings, renders, posters
+    public/assets/brand/      the personal logo
+    public/assets/decor/      the drawn wave and ring artwork
+    public/assets/cv/         the CV document
+    lib/artwork-content.ts    the written titles and descriptions
+    lib/resume.ts             the written biography and history
+
+You may view this work, and read it as part of reading the source. You may
+NOT copy, reproduce, republish, distribute, sell, modify, retouch, train a
+machine-learning model on, or create derivative works from it, whether for
+commercial or non-commercial purposes, without prior written permission
+from Chai Gai Foon.
+
+Requests: chaigaifoon@gmail.com
+
+The pieces shown here were made for coursework and for personal practice.
+Some of them reference or recreate third-party material — the Oppenheimer
+poster recreations and the Doraemon animation studies are student
+exercises, not official artwork, and the underlying properties belong to
+their respective owners. Nothing in this file claims any right over those
+properties.
+
+
+===============================================================================
+2. THE SITE'S SOURCE CODE — MIT Licence
+===============================================================================
+
+The code that builds this site — the TypeScript, React components, CSS,
+layout data and configuration, i.e. everything in this repository that is
+not creative content as described in section 1 — is released under the MIT
+licence:
+
+Permission is hereby granted, free of charge, to any person obtaining a
+copy of this software and associated documentation files (the "Software"),
+to deal in the Software without restriction, including without limitation
+the rights to use, copy, modify, merge, publish, distribute, sublicense,
+and/or sell copies of the Software, and to permit persons to whom the
+Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in
+all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
+THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+DEALINGS IN THE SOFTWARE.
+
+In short: take the code, keep your hands off the artwork.
