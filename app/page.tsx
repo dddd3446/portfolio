@@ -10,10 +10,15 @@ export default function HomePage() {
           aspect ratio to the source and crops via object-fit. */}
       <div className={s.photo}>
         <Image
-          src="/assets/images/home/hero.png"
+          src="/assets/images/home/hero.jpg"
           alt="Chai Gai Foon in a suit and wide-brimmed hat, lit against a bright circular backdrop"
           fill
-          sizes="100vw"
+          /* The box is half the frame plus the inset, which works out at about
+             64% of the viewport at 768 and above, and the full width at 390.
+             Saying 100vw everywhere asked for a variant two and a half times
+             the pixels the box can show — invisible while the source was
+             smaller than the box, and expensive now that it is far larger. */
+          sizes="(max-width: 767.98px) 100vw, 64vw"
           quality={90}
           priority
         />
