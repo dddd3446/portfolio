@@ -183,6 +183,27 @@ p {
   font-weight: inherit;
 }
 
+/* A tap on a phone paints a translucent box over whatever was touched —
+   Android's own press feedback, sized to the element's box. On a nav word it
+   is a blue smear; on an artwork tile it is a slab of blue across the work.
+   Turned off site-wide: every control here already answers a press by
+   navigating or opening, and the ones that linger say so themselves.
+
+   This is the touch flash only. It does not touch the focus ring, which is
+   what a keyboard needs to show where it is, and which the browser draws on
+   :focus-visible — so a tap still leaves nothing behind and Tab still does. */
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Belt and braces for the ring itself. Current browsers already keep it for
+   :focus-visible alone, so this changes nothing on them; older Android ones
+   ring anything focused, which after a tap is a box that sits there until
+   something else is touched. */
+:focus:not(:focus-visible) {
+  outline: none;
+}
+
 a {
   color: inherit;
   text-decoration: none;
