@@ -8,8 +8,13 @@ export const metadata: Metadata = { title: "Contact" };
 export default function ContactPage() {
   return (
     <main className={s.page}>
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img className={s.wave} src="/assets/decor/wave-contact.svg" alt="" aria-hidden />
+      {/* 390 is drawn as its own shape in Figma rather than the wide one
+          scaled down, so it gets its own file. `picture` rather than two
+          images: only the matching source is fetched. */}
+      <picture>
+        <source media="(max-width: 767.98px)" srcSet="/assets/decor/wave-contact-390.svg" />
+        <img className={s.wave} src="/assets/decor/wave-contact.svg" alt="" aria-hidden />
+      </picture>
 
       <div className={s.stage}>
         <a className={s.email} href={`mailto:${SITE.email}`}>

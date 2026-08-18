@@ -16,24 +16,30 @@
   background: var(--c-bg);
   min-height: var(--page-h);
   flex: 1 0 auto;
+
+  /* The wide shape runs to the bottom of its box; 390 stops short of it. */
+  --wave-fill-y: calc(var(--wave-y) + var(--wave-h));
 }
 
 /* At 768 and wider the wave is drawn taller than the frame and the overflow
    above already crops it, so growing the page just reveals more of a shape
-   that was there all along. At 390 it is the one breakpoint where the wave
-   ends exactly on the frame edge (117 + 369.5 = 486.5 against a 487 frame),
-   so the extra height would expose the page ground under the wave's flat
-   bottom — a hard grey-on-white line across the screen just above the
-   footer. This continues the wave's own fill from that edge down.
+   that was there all along. 390 is the one breakpoint where the shape's two
+   bottom corners land exactly on the frame edge (486.5 against a 487 frame)
+   and the footer covers the dip between them, so a page taller than the
+   frame would show the ground through those corners — two white notches and
+   then a hard edge across the screen just above the footer. This continues
+   the wave's own fill from the corner line down.
 
-   Its top sits below the frame at every other breakpoint, which makes the
-   height negative and the block collapses to nothing, so it costs those
-   nothing. Painted last, but only ever over the band beneath the wave,
-   which the design leaves empty. */
+   Keyed to the corners rather than to the bottom of the wave's box, which
+   sits 74px lower and behind the footer. Its top is below the frame at every
+   other breakpoint, which makes the height negative and the block collapses
+   to nothing, so it costs those nothing. Painted last, but only ever over
+   the band the design leaves empty, and in the wave's own colour where the
+   two overlap. */
 .page::after {
   content: "";
   position: absolute;
-  inset: calc(var(--wave-y) + var(--wave-h)) 0 0 0;
+  inset: var(--wave-fill-y) 0 0 0;
   background: var(--c-wave);
 }
 
@@ -47,7 +53,15 @@
   top: var(--wave-y);
   width: 100%;
   height: var(--wave-h);
-  transform: scaleX(-1);
+}
+
+/* Figma mirrors the wide shape in place, so the export faces the other way
+   and is flipped back here. The 390 file is exported as it sits and needs
+   no flip, which is why this is not on the rule above. */
+@media (min-width: 768px) {
+  .wave {
+    transform: scaleX(-1);
+  }
 }
 
 .email {
@@ -159,7 +173,9 @@
   .page {
     --page-h: 30.4375rem; /* 487 */
     --wave-y: 7.3125rem; /* 117 */
-    --wave-h: 23.09375rem; /* 369.5 */
+    --wave-h: 27.75rem; /* 444 — the shape's full box, the last 74 of it
+                           behind the footer, as Figma draws it */
+    --wave-fill-y: 30.40625rem; /* 486.5 — where its bottom corners sit */
     --email-y: 13.4375rem; /* 215 */
     --email-size: 0.9375rem; /* 15 */
     --email-track: 0.1125rem; /* 1.8 */
