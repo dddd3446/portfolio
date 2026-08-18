@@ -207,11 +207,18 @@
   white-space: nowrap;
 }
 
+/* A tracking unit wider than the frame it was measured from. CSS puts a
+   letter-space after the last character of a line; Figma puts one only
+   between characters. So a box taken off a Figma text frame is one of them
+   too narrow to hold the same words, and a line that filled its frame in the
+   design wraps a word early here. At 390 that cost this paragraph a line —
+   four where the frame draws three — and it is the only text on the site
+   close enough to its edge for the difference to show. */
 .introBody {
   position: absolute;
   top: var(--intro-body-y);
   left: var(--col-b);
-  width: var(--intro-body-w);
+  width: calc(var(--intro-body-w) + var(--intro-body-track));
 }
 
 .education {
@@ -575,7 +582,7 @@
   }
 
   .introBody {
-    width: var(--intro-body-w);
+    width: calc(var(--intro-body-w) + var(--intro-body-track));
   }
 
   .education {
