@@ -32,11 +32,20 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 ### 版控狀況(2026-08-18 建立)
 
 - **repo 根目錄 = `portfolio/`**,不是外面那層 `portfolio website/`。這樣之後接 Vercel 不用設定子目錄。
-- 第一個 commit `048b20a`,124 個檔案,`.git` 約 30MB。
+- 第一個 commit(`_unused` 移除時歷史被重寫過,hash 已變),約 110 個檔案,`.git` 約 29MB。
 - `.gitignore` 是 Next 的標準版本,沒有改過。`node_modules`(434MB)和 `.next`(321MB)都擋掉了,所以 800MB 的資料夾只有 30MB 進版控。`public/assets/`(32MB 作品圖)**有**進去。
 - **`id` 與 `slug` 是兩回事**(2026-08-18 起):`id`(`vp-01`、`sd-05`…)是內部識別,`lib/artwork-content.ts` 用它當 key,這兩份文件裡的引用也都是它,**不會變**;`slug`(`yellow-ixora`…)只負責公開網址。改標題不會自動改網址,要自己去改 `slug`,上線後再改還得補 redirect。
-- **還沒有 GitHub remote**,是屋主刻意的——等網站真的完成再推,推之前要先決定 public 還是 private。
+- **GitHub:`dddd3446/portfolio`,public**(2026-08-18 推上)。只有屋主一人有寫入權;fork 是別人帳號下的獨立副本,PR 只是提議,都動不到這個 repo 或線上網站。
+- **`LICENSE`:作品與程式碼分開授權。** `public/assets/` 底下的作品、以及 `artwork-content.ts` / `resume.ts` 裡的文字保留所有權利(含禁止拿去訓練模型);程式碼是 MIT。GitHub 顯示「View license」而不是「MIT」是刻意的——標成 MIT 會讓人誤以為作品也能拿。
+- **`public/assets/_unused/` 已從版控與 git 歷史整個移除**(它在初始 commit 裡,單純 `git rm` 會留在歷史、clone 照樣下載),檔案還在硬碟上,`.gitignore` 擋著。
 - Windows 上 `git add` 會跳一堆 `LF will be replaced by CRLF`,那是正常的行末轉換(repo 存 LF、工作區用 CRLF),不是錯誤。專案沒有加 `.gitattributes`。
+
+### 部署(2026-08-18 上線)
+
+- **Vercel,接在 `main` 上**,push 就自動部署。網址目前是自動產生的 `portfolio-topaz-zeta-70.vercel.app`。
+- `.vercel.app` 的名字可以在 Vercel → Settings → Domains **免費**換掉(換了舊網址就不通)。自己的網域(`.com` 之類)要跟註冊商買,但接上 Vercel 與 HTTPS 都免費。
+- **完全公開,沒有登入保護**,也**沒有擋搜尋引擎**(屋主的決定——這就是拿來給人看的)。
+- **開發用的 `/preview` 與 `/preview/artwork` 已刪除**。它們是填文案時對照圖與 key 用的,48 件寫完就沒用途了,而且部署後任何知道網址的人都打得開。要認 `vp-17` 是哪張圖,看 `lib/artwork-content.ts` 每一筆上方的註解。
 
 已知的 Next 16 眉角(踩過的):
 - `<Image fill>` 不能再搭配 `style.width` / `style.height`,會直接報錯。需要自訂尺寸就別用 `fill`,改用明確的 `width` / `height`。
@@ -126,7 +135,8 @@ portfolio/
 ├── components/
 │   ├── SiteChrome.tsx          決定哪些路由要套 header/footer
 │   ├── Header.tsx / Footer.tsx 全站共用
-│   └── ArtworkNav.tsx          分類子導覽 + scroll-spy
+│   ├── ArtworkNav.tsx          分類子導覽 + scroll-spy
+│   └── ArtworkSwipe.tsx        詳情頁的左右滑動換頁(只在觸控裝置生效)
 ├── lib/
 │   ├── artwork.ts              49 個圖塊 × 4 斷點的座標、裁切、分類定義
 │   │                           10 個動畫圖塊另外帶 youtubeId
@@ -164,11 +174,15 @@ portfolio/
 | 跨斷點設計不一致(待辦 11) | ✅ 屋主決定維持現狀,四項都不改 |
 | 素材整理(待辦 13) | ✅ 海報壓到 3.46MB;Figma 散落節點與 `_unused/` 決定留著 |
 | 網址改成有意義的 slug(待辦 12) | ✅ 48 個網址全換成可讀 slug;`id` 與 `slug` 分家 |
-| 版控 | ✅ git repo 已建(`main`);⬜ **GitHub 還沒推**,屋主已決定要 public |
+| 版控 | ✅ GitHub `dddd3446/portfolio`(**public**),`LICENSE` 已加 |
+| 部署 | ✅ Vercel,push `main` 自動上線 |
+| 真機修正(待辦 16) | ✅ hover 手機關閉、Home header 配色、footer 貼底、Contact 波浪接縫、滑動換頁 |
 
-**程式端的待辦已經清空,待辦 3 ~ 15 全部結案。** 剩下唯一一件事是推上 GitHub(public,屋主已決定)。
+**待辦 3 ~ 16 全部結案,沒有未完成項目。** 網站已經 public 上線。
 
-`npm run build` 目前是過的,**57 個頁面**全部靜態產生(其中 48 個是作品詳情頁),`tsc` 與 `eslint` 乾淨。
+`npm run build` 目前是過的,**55 個頁面**全部靜態產生(其中 48 個是作品詳情頁;`/preview` 兩頁已刪),`tsc` 與 `eslint` 乾淨。
+
+> **這台開發機的視窗縮不到 768 以下**(系統顯示縮放擋住,連 `resize_window` 下去 `innerWidth` 都還是 1536)。所以 390 斷點只能靠量設計稿數字與檢查編譯後的 CSS 驗證,**改到手機版的東西務必在真機上看過**——待辦 16 那五項全是這樣才抓到的。
 
 ---
 
