@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
+import ArtworkSwipe from "@/components/ArtworkSwipe";
 import { WORKS } from "@/lib/artwork";
 import { contentFor } from "@/lib/artwork-content";
 import s from "./page.module.css";
@@ -88,6 +89,8 @@ export default async function ArtworkDetailPage({ params }: Props) {
 
   return (
     <main className={s.page}>
+      <ArtworkSwipe prev={prev?.slug} next={next?.slug} />
+
       <div className={s.stage}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className={s.rings} src="/assets/decor/rings-detail.svg" alt="" aria-hidden />
