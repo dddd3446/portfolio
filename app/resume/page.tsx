@@ -26,12 +26,22 @@ export default function ResumePage() {
     <main className={s.page}>
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className={s.waveTop} src="/assets/decor/wave-resume-top.svg" alt="" aria-hidden />
-      {/* As on Contact, 390 draws this curve as its own shape rather than a
-          narrowed copy of the wide one. */}
-      <picture>
-        <source media="(max-width: 767.98px)" srcSet="/assets/decor/wave-resume-390-bottom.svg" />
-        <img className={s.waveBottom} src="/assets/decor/wave-resume-bottom.svg" alt="" aria-hidden />
-      </picture>
+      {/* As on Home and Contact, 390 draws this curve as its own shape, so
+          both ship and the CSS picks one. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className={`${s.waveBottom} ${s.waveWide}`}
+        src="/assets/decor/wave-resume-bottom.svg"
+        alt=""
+        aria-hidden
+      />
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className={`${s.waveBottom} ${s.waveNarrow}`}
+        src="/assets/decor/wave-resume-390-bottom.svg"
+        alt=""
+        aria-hidden
+      />
       {/* A third curve above the footer, drawn only on the 390 frame. */}
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img className={s.waveFoot} src="/assets/decor/wave-resume-390-foot.svg" alt="" aria-hidden />

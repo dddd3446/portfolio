@@ -16,6 +16,13 @@
   display: none;
 }
 
+/* Both lower curves ship and the CSS picks one, as Home does — and unlike
+   `picture`, a media query is still right after the window is dragged across
+   the breakpoint rather than keeping whichever file was chosen at parse. */
+.waveNarrow {
+  display: none;
+}
+
 .portrait img {
   object-fit: cover;
   /* The source is taller than the frame; Figma crops the excess off the top. */
@@ -604,6 +611,14 @@
 
   .colHobbies {
     left: 13.375rem; /* 214 */
+  }
+
+  .waveWide {
+    display: none;
+  }
+
+  .waveNarrow {
+    display: block;
   }
 
   .waveFoot {

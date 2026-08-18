@@ -55,12 +55,28 @@
   height: var(--wave-h);
 }
 
-/* Figma mirrors the wide shape in place, so the export faces the other way
-   and is flipped back here. The 390 file is exported as it sits and needs
-   no flip, which is why this is not on the rule above. */
-@media (min-width: 768px) {
-  .wave {
-    transform: scaleX(-1);
+/* Figma mirrors the wide shape in place, so its export faces the other way
+   and is flipped back here. The 390 file is exported as it sits. */
+.waveWide {
+  transform: scaleX(-1);
+}
+
+/* Both curves ship and the CSS picks one, as Home does. A media query is
+   also the only way that stays right while a window is being dragged across
+   the breakpoint: a <picture> chooses its source when the document is parsed
+   and keeps that choice through a resize. Together they are about a
+   kilobyte, so the one not shown costs nothing worth protecting. */
+.waveNarrow {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+  .waveWide {
+    display: none;
+  }
+
+  .waveNarrow {
+    display: block;
   }
 }
 
