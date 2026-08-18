@@ -45,6 +45,7 @@ Figma 檔案:https://www.figma.com/design/2ZgWK6lIbYXUo7F5Bjuv8o/portfolio
 - **Vercel,接在 `main` 上**,push 就自動部署。網址目前是自動產生的 `portfolio-topaz-zeta-70.vercel.app`。
 - `.vercel.app` 的名字可以在 Vercel → Settings → Domains **免費**換掉(換了舊網址就不通)。自己的網域(`.com` 之類)要跟註冊商買,但接上 Vercel 與 HTTPS 都免費。
 - **完全公開,沒有登入保護**,也**沒有擋搜尋引擎**(屋主的決定——這就是拿來給人看的)。
+- **頁面右下角那顆深色小圓圈是 Vercel Toolbar,不是網站的一部分。** 它只對「已登入 Vercel 且對這個專案有存取權」的瀏覽器注入,訪客拿到的 HTML 裡完全沒有它(2026-08-18 以無登入態實測五個路由,`vercel.live` / `_next-live` / `vercel-toolbar` 一個字串都搜不到)。順帶一提,線上頁面目前是**零第三方腳本**,所有 JS 都從自己的網域出去。
 - **開發用的 `/preview` 與 `/preview/artwork` 已刪除**。它們是填文案時對照圖與 key 用的,48 件寫完就沒用途了,而且部署後任何知道網址的人都打得開。要認 `vp-17` 是哪張圖,看 `lib/artwork-content.ts` 每一筆上方的註解。
 
 已知的 Next 16 眉角(踩過的):
@@ -89,6 +90,7 @@ Figma 有 **390 / 768 / 1440 / 1920** 四組完整的頁面。關鍵認知:**它
 ## 視覺語言 / 設計決定(已定案,直接照著做,不用重新設計)
 
 - **裝飾背景 motif**:主要頁面統一用「波浪曲線」(S-curve / wave)。**但作品詳情疊層是同心圓**,這是刻意的例外,不是漏改。
+- **波浪在 390 是另外畫的形狀,不是同一個形狀縮小。** 768 / 1440 / 1920 三個斷點的長寬比一致,共用一份 SVG 等比縮放就好;390 的長寬比完全不同,有自己的檔案(`wave-contact-390.svg`、`wave-resume-390-bottom.svg`),用 `<picture>` 切換。**新增或修改波浪時,先算各斷點的長寬比再決定要幾份檔案** —— 詳見 `vscodetodo_1.md` 待辦 17 第 2 點。
 - **Footer**:黑底,右側大字標語「Design should be practical, not just pretty」+ 左下角版權「2026 copyright by Chai Gai Foon」。Home / Artwork / Resume 是完整版(含社群連結列表);**Contact 的 footer 刻意只留標語 + 版權**,因為 Contact 頁中間已經有一排大顆的社群 icon,footer 再放一次會重複。(注意:768 那張稿把社群連結畫回去了,跟 1440 / 1920 不一致,程式照 1440 / 1920 處理,見待辦 11。)
 - **Header**:4 頁共用一套,logo(左)+ Home/Artwork/Resume/Contact 四個 nav 文字(右)+ 一個小方塊指示條標示目前頁面。**390 沒有橫排 nav,改成漢堡選單**(Figma 的 `option 390` 元件)。
 - **Header 的 scroll 行為**:Artwork / Resume / Contact 這 3 頁的 header 往下滾動時**固定不動**。**Home 頁排除在外**——Home 的 header 是透明的、跟著頁面捲走,這是屋主明確指示的例外。
@@ -177,12 +179,17 @@ portfolio/
 | 版控 | ✅ GitHub `dddd3446/portfolio`(**public**),`LICENSE` 已加 |
 | 部署 | ✅ Vercel,push `main` 自動上線 |
 | 真機修正(待辦 16) | ✅ hover 手機關閉、Home header 配色、footer 貼底、Contact 波浪接縫、滑動換頁 |
+| 第二輪手機版對稿(待辦 17) | ✅ 滑動只帶動作品、390 專屬波浪形狀、Resume 自介斷行 |
 
-**待辦 3 ~ 16 全部結案,沒有未完成項目。** 網站已經 public 上線。
+**待辦 3 到 17 全部結案,沒有未完成項目。** 網站已經 public 上線。
 
 `npm run build` 目前是過的,**55 個頁面**全部靜態產生(其中 48 個是作品詳情頁;`/preview` 兩頁已刪),`tsc` 與 `eslint` 乾淨。
 
-> **這台開發機的視窗縮不到 768 以下**(系統顯示縮放擋住,連 `resize_window` 下去 `innerWidth` 都還是 1536)。所以 390 斷點只能靠量設計稿數字與檢查編譯後的 CSS 驗證,**改到手機版的東西務必在真機上看過**——待辦 16 那五項全是這樣才抓到的。
+> **這台開發機的視窗縮不到 768 以下**(系統顯示縮放擋住,連 `resize_window` 下去 `innerWidth` 都還是 1536)。待辦 16 那五項全是因此拖到上線才被真機抓到。
+>
+> **驗證 390 的辦法(待辦 17 用的)**:`next build && next start`,然後在瀏覽器裡開一個 `width="390"` 的 `<iframe>` 指向它。**iframe 有自己的 viewport,media query 是照 iframe 寬度算的**,所以 390 那套 CSS 會真的生效,可以跟 Figma 的 render 並排截圖逐像素比對。旁邊再擺一個高一點的 iframe,就能同時看「比設計稿高的手機」會長怎樣。
+>
+> 但**手感類的東西(滑動、hover、瀏覽器工具列收合、真實 DPI 下的字重)還是只有真機說了算**,改完仍然要在手機上看過。
 
 ---
 
@@ -194,5 +201,6 @@ portfolio/
 
 實用經驗:
 - 對整個 frame 呼叫 `get_design_context` 一次,會把該 frame 底下所有元素的座標、字級、字距、**以及圖片裁切矩形**全部吐出來,比一個節點一個節點問快非常多。
-- `get_metadata` 只給座標,拿不到裁切跟字級。
+- `get_metadata` 只給座標與尺寸,拿不到裁切跟字級。不過**光是尺寸就夠抓出「這個斷點是另外畫的」** —— 把同一個圖層在四個斷點的長寬比算出來比一比就知道(待辦 17 第 2 點就是這樣抓到的)。
+- 要單獨匯出某個向量圖層,用 `download_assets` 加 `defaultFormat: "svg"`。匯出的是**該圖層在畫面上呈現的樣子**(Figma 裡的鏡像、旋轉已經烘進去了),所以 CSS 那邊原本用來還原 transform 的 `scaleX(-1)` 之類要記得拿掉,不然會翻兩次。
 - 抓出來的素材連結 7 天後過期,要用就馬上下載。
