@@ -2,10 +2,18 @@ import type { Metadata } from "next";
 import Image from "next/image";
 
 import { EDUCATION, INTRO, SKILL_GROUPS, type SkillGroup } from "@/lib/resume";
+import { bandSizes } from "@/lib/image-sizes";
 import { SITE } from "@/lib/site";
 import s from "./page.module.css";
 
 export const metadata: Metadata = { title: "Resume" };
+
+/* `--portrait-w` at each band, from page.module.css. Stated per band and with
+   the root font size's ceiling in it, because the frame is placed in rem: on a
+   phone the portrait is drawn 219 wide, not the 337 of the 1440 stage, and
+   between a 487.5px viewport and the end of the band it pins at 273.75 rather
+   than going on growing. */
+const PORTRAIT_SIZES = bandSizes({ w390: 219, w768: 218.769, w1440: 337, w1920: 376 });
 
 function SkillColumn({ group, className }: { group: SkillGroup; className: string }) {
   return (
@@ -54,11 +62,7 @@ export default function ResumePage() {
             src="/assets/images/resume/portrait.png"
             alt="Chai Gai Foon standing in a suit and wide-brimmed hat, pointing at the camera"
             fill
-            /* `--portrait-w` over each band's stage: 219/390, 218.769/768,
-               337/1440, 376/1920. A single length said 337 everywhere, which
-               on a phone drawing it 219 wide fetched a variant two steps up
-               the ladder. */
-            sizes="(max-width: 767.98px) 56.15vw, (max-width: 1199.98px) 28.49vw, (max-width: 1727.98px) 23.40vw, 19.58vw"
+            sizes={PORTRAIT_SIZES}
             quality={90}
             priority
           />

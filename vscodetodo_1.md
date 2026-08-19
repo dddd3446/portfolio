@@ -1116,7 +1116,7 @@ npm run weigh http://localhost:3000    # 對本機 build 跑(上線前)
 
 **為什麼不直接開瀏覽器測**:試過三條路都不行 ——(a)`resize_window` 對 Windows 最大化視窗無效;(b)`window.open` 開小窗被擋;(c)iframe 給了真的 387px viewport,但 **Chrome 若快取裡已有更大的變體會優先用它**,所以第二次量到的是第一次的快取(用 `q=90` 換乾淨命名空間也只能用一次)。srcset 的挑選演算法是規格化、確定性的,直接套用反而比較可靠,而位元組是真的抓的。
 
-### 裝置矩陣(2026-08-19,修好之後)
+### 裝置矩陣(2026-08-19,兩次修正都做完之後的最終數字)
 
 `/artwork`,49 張圖(8 張 eager、41 張 lazy):
 
@@ -1128,41 +1128,65 @@ npm run weigh http://localhost:3000    # 對本機 build 跑(上線前)
 | iPhone 15 | 393px @3x | 207 KB | 870 KB |
 | Pixel 8 | 412px @2.625x | 168 KB | 715 KB |
 | iPhone 15 Pro Max | 430px @3x | 227 KB | 930 KB |
-| iPad mini | 744px @2x | 237 KB | **1096 KB** ← 見下 |
+| iPad mini | 744px @2x | 164 KB | **683 KB** |
 | iPad Pro 11" | 834px @2x | 223 KB | 1053 KB |
 | Laptop 1280 | 1280px @1x | 202 KB | 889 KB |
-| Laptop 1536(Win 125%) | 1536px @1.25x | 237 KB | **1246 KB** |
+| Laptop 1536(Win 125%) | 1536px @1.25x | 237 KB | **1217 KB** |
 | Desktop 1920 | 1920px @1x | 216 KB | 1086 KB |
 
-其他頁都很輕:`/` 的 hero 14–76 KB、`/resume` 27–135 KB、`/artwork/[slug]` 固定 18 KB、`/contact` 0(沒有圖)。
+其他頁都很輕:`/` 的 hero 14–76 KB、`/resume` 27–74 KB、`/artwork/[slug]` 固定 18 KB、`/contact` 0(沒有圖)。
 
-**固定成本(HTML + JS + CSS + 字型,壓縮後實際傳輸,與裝置無關)**:`/` 234 KB、`/artwork` 263 KB、`/resume` 237 KB、`/contact` 233 KB、詳情頁 235 KB。
+**固定成本(HTML + JS + CSS + 字型,壓縮後實際傳輸,與裝置無關)**:`/` 234 KB、`/artwork` 269 KB、`/resume` 237 KB、`/contact` 233 KB、詳情頁 235 KB。`/artwork` 比其他頁多的那幾 KB,是 49 張圖的 `srcSet` 與 `sizes` 字串本身。
 
 > **量測坑(第三個)**:Node 的 `fetch` 會自動解壓並連帶拿掉 `content-length`,所以 `arrayBuffer().byteLength` 是**解壓後**的大小 —— JS 那包會虛報成 2.6 倍(2120 → 5598 bytes)。腳本裡改用 `node:https` 直接數原始 bytes。第一版就是這樣誤報成「固定成本 659 KB」,實際是 234 KB。
 
-### 還沒處理的:斷點上緣的殘留浪費
+### 斷點上緣的殘留浪費 —— 已處理(2026-08-19)
 
-`sizes` 的 vw 值在**該斷點的設計寬度上精確,超過就高估** —— 因為 root font-size 有上限(390 band 是 `min(100vw/24.375, 20px)`,超過 487.5px 就停在 20px;768 band 是 `min(100vw/48, 18.4px)`,超過 883.2px 停在 18.4px)。版面停止長大,vw 卻繼續長。
+**問題**:`sizes` 的 vw 值在該斷點的設計寬度上精確,超過就高估 —— root font-size 有上限(390 band 是 `min(100vw/24.375, 20px)`,超過 487.5px 就停在 20px;768 band 超過 883.2px 停在 18.4px;兩個桌機 band 停在 16px)。版面停止長大,vw 卻繼續長。iPad mini(744px)剛好落在 390 band 的上限之後,整頁多抓 38%。
 
-實測這個殘留值多少:
+**做法**:每個 band 出**兩個** clause —— 上限之前是比例,之後是固定長度,切換點就是上限生效的那個 viewport(`上限px × 稿寬 / 16`,即 487.5 / 883.2 / 1440 / 1920)。抽成 `lib/image-sizes.ts` 的 `bandSizes()`,列表頁與 Resume 共用。
 
-| | 現在 | 把上限也寫進 `sizes` | |
+```
+(max-width: 487.48px) 31.79vw, (max-width: 767.98px) 155.00px,
+(max-width: 883.18px) 29.82vw, (max-width: 1199.98px) 263.35px,
+(max-width: 1439.98px) 29.79vw, (max-width: 1727.98px) 429.00px,
+(max-width: 1919.98px) 22.34vw, 429.00px
+```
+
+**只用寬度查詢和長度,不用 CSS `min()`。** `min()` 可以四個 clause 寫完、字串短一半,但**不支援的瀏覽器會跳過整條 source-size,一路掉到預設的 100vw** —— 那會抓最大的變體,比修之前還糟。八個 clause 醜一點,但每個瀏覽器都懂。
+
+### 結果
+
+| 裝置 | 之前 | 之後 | |
 |---|---|---|---|
-| iPad mini 744px @2x | 1096 KB | 683 KB | **還能再省 38%** |
-| Laptop 1024 @2x | 1279 KB | 1203 KB | 6% |
-| 大手機 540px @3x | 1141 KB | 1085 KB | 5% |
-| iPad Pro 11" 834px @2x | 1053 KB | 1053 KB | 0% |
+| **iPad mini 744px @2x**(列表頁捲到底) | 1096 KB | **683 KB** | **−413 KB** |
+| iPad mini(未捲動) | 237 KB | **164 KB** | −73 KB |
+| **iPad mini(Resume)** | 135 KB | **60 KB** | −75 KB |
+| Laptop 1536 @1.25x | 1246 KB | 1217 KB | −29 KB |
+| 所有手機(360–430px) | — | **完全不變** | 0 |
 
-**只有 488–767px 這一段(小平板、大手機橫放)明顯**,其他都在個位數。
+**代價**:`/artwork` 的 HTML 從 30.2 KB 變 36.5 KB(壓縮後),**+6.3 KB,每個訪客都付**,包括拿不到好處的手機。換算下來手機總量增加約 0.9%(263 KB 固定 + 413 KB 圖片)。Resume 的 HTML 沒變(只有一張圖)。
 
-修法是在 `sizes` 裡多加兩個斷點,把上限用固定長度表示:
+> 這筆交易是屋主決定要做的。不划算的話 revert `d1c7d81` 之後那個 commit 即可,手機端不受影響。
 
+### 過程中自己製造又抓到的一個回歸 —— Next 會依 `vw` 修剪 srcset
+
+第一版把數值做了「去掉尾隨零」的美化,`25.00vw` 變成 `25vw`。結果**兩張圖的 128w 和 256w 階梯不見了**(128w → 256w、256w → 384w)。
+
+原因在 `next/dist/esm/shared/lib/get-img-props.js` 的 `getWidths()`:
+
+```js
+const viewportWidthRe = /(^|\s)(1?\d?\d)vw/g;   // 只認整數 vw
+...
+const smallestRatio = Math.min(...percentSizes) * 0.01;
+return { widths: allSizes.filter(s => s >= deviceSizes[0] * smallestRatio), kind: 'w' };
 ```
-(max-width: 487.98px) 31.79vw, (max-width: 767.98px) 155px,
-(max-width: 883.98px) 29.82vw, (max-width: 1199.98px) 229px, ...
-```
 
-**沒做,因為**:(a)受影響的是小平板,對這個作品集不是主要觀眾;(b)`sizes` 字串會變兩倍長 × 49 張,HTML 跟著變重,可能吃掉一部分省下的;(c)高估是安全方向 —— 代價是抓大一號,不會糊。**要做的話先用 `npm run weigh` 量 HTML 增加多少,再決定划不划算。**
+**它只認得整數 vw。** 我們的值大多是小數(`17.44vw`),它一個都讀不到 → 保留完整階梯,這正是想要的。但一旦有**某一個**剛好是整數(`25vw`),它就只看到那一個,認定「這頁最窄不會低於 25%」,把 `640 × 0.25 = 160` 以下的階全部剪掉 —— 而真正的最窄是 `17.44vw`。
+
+**所以 `bandSizes()` 一律輸出兩位小數**,讓那條 regex 一個都認不出來。`lib/image-sizes.ts` 的 `round()` 有註解說明,不要「順手」把它改成 `+n.toFixed(2)`。
+
+> 抓到的方式:改完之後拿線上版和本機 build 逐張比對挑選結果,發現手機上有 2 張變大了。**如果只看 iPad mini 的數字有沒有變好,這個回歸會直接上線。** 改一個斷點的行為,要把每個斷點都重量一次。
 
 ---
 
