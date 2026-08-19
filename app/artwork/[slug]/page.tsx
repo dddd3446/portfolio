@@ -87,7 +87,14 @@ export default async function ArtworkDetailPage({ params }: Props) {
                 src={work.src}
                 alt={work.alt}
                 fill
-                sizes="(min-width: 1200px) 680px, (min-width: 768px) 454px, 278px"
+                /* `--fig-w` over that band's `--dw`, because the whole frame
+                   is scaled by `--u` rather than pinned: the box is that
+                   fraction of the width at any window size. Lengths would be
+                   wrong twice over — they were, the phone one still said 278
+                   after the box grew to 300 — and a phone in landscape, where
+                   `--u` comes off the height instead, is served by the
+                   fraction overstating rather than a length understating. */
+                sizes="(max-width: 767.98px) 76.92vw, (max-width: 1199.98px) 59.11vw, (max-width: 1727.98px) 47.22vw, 35.42vw"
                 quality={90}
                 priority
               />

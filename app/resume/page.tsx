@@ -54,7 +54,11 @@ export default function ResumePage() {
             src="/assets/images/resume/portrait.png"
             alt="Chai Gai Foon standing in a suit and wide-brimmed hat, pointing at the camera"
             fill
-            sizes="337px"
+            /* `--portrait-w` over each band's stage: 219/390, 218.769/768,
+               337/1440, 376/1920. A single length said 337 everywhere, which
+               on a phone drawing it 219 wide fetched a variant two steps up
+               the ladder. */
+            sizes="(max-width: 767.98px) 56.15vw, (max-width: 1199.98px) 28.49vw, (max-width: 1727.98px) 23.40vw, 19.58vw"
             quality={90}
             priority
           />

@@ -9,6 +9,7 @@ import {
   CATEGORIES,
   WAVES,
   WORKS,
+  type Bp,
   type Box,
   type Crop,
   type PerBp,
@@ -65,15 +66,51 @@ function fitVars(work: Work): Vars {
   return vars;
 }
 
-/** Widest rendered width across the bands, for the srcset hint. */
+/** How wide the tile is actually drawn at one band, in that band's Figma px.
+    A cropped tile is drawn wider than its frame — `--cw` is a percentage of
+    the box — so the crop has to be counted in. */
+const drawnAt = (work: Work, bp: Bp) =>
+  work.box[bp].w * ((work.crop?.[bp]?.width ?? 100) / 100);
+
+/** Widest rendered width across the bands, for the aspect-ratio hint. */
 function widest(work: Work) {
-  return Math.round(
-    Math.max(
-      ...(BREAKPOINTS).map(
-        (bp) => work.box[bp].w * ((work.crop?.[bp]?.width ?? 100) / 100),
-      ),
-    ),
-  );
+  return Math.round(Math.max(...BREAKPOINTS.map((bp) => drawnAt(work, bp))));
+}
+
+/* The stage each band is drawn against, and the media query that selects it —
+   the same four ranges page.module.css switches on. */
+const BANDS = [
+  { bp: "w390", stage: 390, query: "(max-width: 767.98px)" },
+  { bp: "w768", stage: 768, query: "(max-width: 1199.98px)" },
+  { bp: "w1440", stage: 1440, query: "(max-width: 1727.98px)" },
+  { bp: "w1920", stage: 1920, query: null },
+] as const satisfies readonly { bp: Bp; stage: number; query: string | null }[];
+
+/**
+ * The `sizes` hint for one tile: how much of the viewport it covers, per band.
+ *
+ * It has to be a fraction, not a length. Every measurement on this page is
+ * emitted in rem and the root font size is itself a share of the viewport, so
+ * a tile drawn 124 Figma px wide on the 390 stage covers 124/390 of the
+ * screen — the same fraction on a 360px phone and a 430px one.
+ *
+ * And it has to be per band, because the four layouts are hand-placed rather
+ * than one layout resized: the tile that fills 547px of the 1440 stage is 124
+ * on the 390 one. A single length for all four — which is what this was, the
+ * widest of the bands — told a phone that every tile was as wide as its
+ * desktop instance. At 3x device pixels that asked for the 1920px variant of
+ * a picture being drawn 124px wide, and for five of them the 3840px one: 2.1MB
+ * of artwork where the phone's own layout needs 870KB.
+ *
+ * Each value is exact at its band's design width and overstates above it,
+ * where the root font size caps and the layout stops growing. Overstating is
+ * the safe direction — it costs a larger variant, never a blurry one.
+ */
+function sizesFor(work: Work) {
+  return BANDS.map(({ bp, stage, query }) => {
+    const vw = `${((drawnAt(work, bp) / stage) * 100).toFixed(2)}vw`;
+    return query ? `${query} ${vw}` : vw;
+  }).join(", ");
 }
 
 const ZERO: PerBp<number> = { w390: 0, w768: 0, w1440: 0, w1920: 0 };
@@ -181,7 +218,7 @@ export default function ArtworkPage() {
                     alt={work.alt}
                     width={widest(work)}
                     height={Math.round(widest(work) * (work.box.w1440.h / work.box.w1440.w))}
-                    sizes={`${widest(work)}px`}
+                    sizes={sizesFor(work)}
                     /* 75 here alone. This page carries 49 of these down 9000px
                        and the largest is drawn 547 wide, where the step up to
                        90 is invisible and roughly doubles the bytes — which is
