@@ -1,11 +1,42 @@
 import Image from "next/image";
 import Link from "next/link";
 
+import { SITE, SITE_URL } from "@/lib/site";
 import s from "./page.module.css";
+
+/* The name Google prints above the URL in a search result is its own guess,
+   assembled from several signals — and on a *.vercel.app subdomain the guess
+   has been "Vercel", beside Vercel's triangle, because the whole of vercel.app
+   is one registrable domain and the platform is the loudest thing on it. The
+   triangle was ours to fix (it was the untouched create-next-app default still
+   sitting in app/favicon.ico); the name is not, but this is the input Google
+   documents as the way to state it outright, and `openGraph.siteName` in the
+   root layout already agrees with it.
+
+   It goes on the home page and nowhere else: the site name describes the site
+   rather than the page, and Google only looks for it here.
+
+   No promises. Sharing a domain with every other deployment on vercel.app may
+   keep the platform's own name winning until this sits on a domain of its
+   own — and either way Search has to recrawl before anything visibly changes,
+   which takes days to weeks. Stating it correctly costs nothing in the
+   meantime, and it is the half that carries over to a real domain later. */
+const siteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: SITE.owner,
+  url: SITE_URL.href,
+};
 
 export default function HomePage() {
   return (
     <main className={s.hero}>
+      <script
+        type="application/ld+json"
+        /* Rendered verbatim into the HTML. The content is JSON.stringify over
+           two of our own constants — nothing here comes from a request. */
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(siteJsonLd) }}
+      />
       {/* `fill` rather than width/height: the box is deliberately a different
           aspect ratio to the source and crops via object-fit. */}
       <div className={s.photo}>
